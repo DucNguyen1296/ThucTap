@@ -17,6 +17,11 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function upload_files()
+    {
+        return $this->hasMany(UploadFile::class);
+    }
+
 
     public $timestamps = false;
     /**

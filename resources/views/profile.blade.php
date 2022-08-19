@@ -104,7 +104,7 @@
                     @csrf
                     <div class="btn btn__post">
                         <label for="">Add image</label>
-                        <input class="btn__post--post" type="file" />
+                        <input class="btn__post--post" type="file" name="image" />
                     </div>
                     <div class="btn btn__post">
                         <input class="btn__post--upload" type="submit" value="Đăng" />

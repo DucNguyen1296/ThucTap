@@ -8,9 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class UploadFile extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'user_id',
         'image',
         'path'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
