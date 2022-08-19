@@ -100,13 +100,14 @@
 
 
                 </form>
-                <form action="upload">
+                <form action="/upload" enctype="multipart/form-data" method="POST">
+                    @csrf
                     <div class="btn btn__post">
                         <label for="">Add image</label>
                         <input class="btn__post--post" type="file" />
                     </div>
                     <div class="btn btn__post">
-                        <input class="btn__post--post" type="submit" value="Đăng" />
+                        <input class="btn__post--upload" type="submit" value="Đăng" />
                     </div>
                 </form>
             </div>
