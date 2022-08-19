@@ -9,5 +9,6 @@ class UploadFileController extends Controller
     //
     public function store()
     {
+        return view('/');
     }
 }
