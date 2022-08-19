@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+
+use App\Models\User;
+
+class RegisterController extends Controller
+{
+    //
+    public function register(Request $request)
+    {
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $repassword = $request->input('retypepassword');
+        $name = $request->input('name');
+        $date = $request->input('date');
+        $location = $request->input('location');
+        $title = $request->input('title');
+
+        $validate = $request->validate([
+            'email' => 'required||email:filter',
+            'password' => 'required||min:3',
+            'name' => 'required',
+        ]);
+
+
+        if ($password == $repassword) {
+            User::create([
+                'email' => $email,
+                'password' => Hash::make($password),
+                'name' => $name,
+                'date' => $date,
+                'location' => $location,
+                'title' => $title
+            ]);
+            // session()->flash('regiscorrect', 'Đăng ký thành công');
+            Session::flash('regiscorrect', 'Đăng ký thành công');
+            return redirect('/');
+        } else {
+            // session()->flash('notmatch', 'Mật khẩu không khớp, xin nhập lại');
+            Session::flash('notmatch', 'Mật khẩu không khớp, xin nhập lại');
+            return redirect()->route('register');
+        }
+    }
+}
