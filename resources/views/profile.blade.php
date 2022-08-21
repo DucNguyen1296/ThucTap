@@ -82,6 +82,23 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <form action="/avatar" enctype="multipart/form-data" method="POST">
+                    @csrf
+                    <div class="btn btn__post">
+                        <label for="">Add your avatar</label>
+                        <input class="btn__post--post" type="file" name="avatar" />
+                    </div>
+                    <div class="btn btn__post">
+                        <input class="btn__post--upload" type="submit" value="Đăng" />
+                    </div>
+                </form>
+                <div>
+                    <img src="{{ asset('/storage/avatar/' . $avatar->avatar_name) }}" height="200px" width="300px"
+                        alt="Your avatar">
+                </div>
+            </div>
+
         </div>
         <div class="post">
             <div class="post__header">

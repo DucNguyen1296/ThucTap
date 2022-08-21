@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminToolController;
 use App\Http\Controllers\Admin\AdminLoginController;
 use App\Http\Controllers\Admin\User\UserController;
+use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\UploadFileController;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\MyMiddleWare;
@@ -59,9 +60,6 @@ Route::get('user_info', [UserController::class, 'user_info'])->name('admin.user.
 // Route Delete
 Route::delete('/user_info/{id}', [AdminToolController::class, 'user_delete'])->name('admin.user.delete');
 
-// Route to Upload file
-Route::post('/upload', [UploadFileController::class, 'store_file']);
-
 /////////////////////USER ROUTE ////////////////////////
 /////////// POST ROUTE ////////////////
 // Route Access
@@ -78,6 +76,12 @@ Route::post('/change_password', [PasswordController::class, 'updatePassword']);
 
 // Route to Post
 Route::post('/post', [PostController::class, 'post']);
+
+// Route to Upload Avatar
+Route::post('/avatar', [AvatarController::class, 'avatar']);
+
+// Route to Upload file
+Route::post('/upload', [UploadFileController::class, 'upload_img']);
 
 ///////// ////////USER ROUTE /////////////////////
 ////////// GET ROUTE ///////////////

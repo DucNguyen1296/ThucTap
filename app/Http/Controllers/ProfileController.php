@@ -23,8 +23,9 @@ class ProfileController extends Controller
         // dd($user);
 
         $data = $user->posts;
-
+        $avatar = $user->avatars;
+        // dd($avatar->avatar_name);
         // dd($data);
-        return view('/profile', ['user' => $user, 'data' => $data]);
+        return view('/profile', ['user' => $user, 'data' => $data, 'avatar' => $avatar]);
     }
 }

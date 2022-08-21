@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('upload_files', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->nullable();
-            $table->string('image')->nullable();
-            $table->string('path')->nullable();
+            $table->string('file_name')->nullable();
+            $table->string('file_path')->nullable();
             $table->timestamps();
         });
     }

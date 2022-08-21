@@ -57,6 +57,10 @@
                     <div class="form__group">
                         <input type="text" name="title" class="form__input" placeholder="Title" required />
                     </div>
+
+                    <div class="form__group">
+
+                    </div>
                 </div>
 
                 <div class='btn'>

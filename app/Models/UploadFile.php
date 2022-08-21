@@ -11,8 +11,8 @@ class UploadFile extends Model
 
     protected $fillable = [
         'user_id',
-        'image',
-        'path'
+        'file_name',
+        'file_path'
     ];
 
     public function user()
