@@ -18,13 +18,11 @@ class MyMiddleWare
      */
     public function handle($request, Closure $next)
     {
-        if (Gate::allows('isAdmin')) {
+        if (Auth::check() && Gate::allows('isAdmin')) {
             return $next($request);
-        }
-        // elseif (Gate::allows('isUser')) {
-        //     return $next($request);
-        // }
-        else {
+        } elseif (Auth::check() && Gate::allows('isUser')) {
+            return $next($request);
+        } else {
             return back();
         }
     }

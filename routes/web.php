@@ -51,14 +51,23 @@ Route::get('/register', function () {
 
 ////////// GET ROUTE ///////////////
 // Route Login
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['MyMiddleWare'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('main', [AdminController::class, 'admin_index'])->name('admin');
     });
 });
 Route::get('user_info', [UserController::class, 'user_info'])->name('admin.user.info');
-// Route Delete
+
+// Route Delete User
 Route::delete('/user_info/{id}', [AdminToolController::class, 'user_delete'])->name('admin.user.delete');
+
+// Route Edit User
+Route::get('/user_edit_index/{id?}', [AdminToolController::class, 'user_edit_index']);
+
+Route::post('/user_edit/{id}', [AdminToolController::class, 'user_edit'])->name('admin.user.edit');
+
+
+
 
 /////////////////////USER ROUTE ////////////////////////
 /////////// POST ROUTE ////////////////
@@ -77,15 +86,27 @@ Route::post('/change_password', [PasswordController::class, 'updatePassword']);
 // Route to Post
 Route::post('/post', [PostController::class, 'post']);
 
+// Route to Update Post
+Route::get('/post/{id?}', [PostController::class, 'post_index']);
+Route::post('/update_post/{id}', [PostController::class, 'update_post'])->name('user.post.update');
+Route::delete('/delete_post/{id}', [PostController::class, 'delete_post'])->name('user.post.delete');
+
 // Route to Upload Avatar
-Route::post('/avatar', [AvatarController::class, 'avatar']);
+Route::post('/avatar', [AvatarController::class, 'avatar_update']);
 
 // Route to Upload file
 Route::post('/upload', [UploadFileController::class, 'upload_img']);
 
+// Route to Update file
+Route::post('/update_file/{id}', [UploadFileController::class, 'update_img'])->name('user.file.update');
+
+// Route Delete File Upload
+Route::delete('/delete_file/{id}', [UploadFileController::class, 'delete_img'])->name('user.file.delete');
+
+
 ///////// ////////USER ROUTE /////////////////////
 ////////// GET ROUTE ///////////////
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['MyMiddleWare'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index']);
     Route::prefix('profile')->group(function () {
         Route::get('show', [ProfileController::class, 'show']);
@@ -101,6 +122,8 @@ Route::get('change_password', [PasswordController::class, 'change_index']);
 
 // Route Log Out
 Route::get('/logout', [LogOutController::class, 'logout']);
+
+
 
 
 Route::get('/{id?}', function () {

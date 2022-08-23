@@ -51,16 +51,14 @@
                     </div>
 
                     <div class="form__group">
-                        <input type="text" name="location" class="form__input" placeholder="Location" required />
+                        <input type="text" name="location" class="form__input" placeholder="Location" />
                     </div>
 
                     <div class="form__group">
-                        <input type="text" name="title" class="form__input" placeholder="Title" required />
+                        <input type="text" name="title" class="form__input" placeholder="Title" />
                     </div>
 
-                    <div class="form__group">
 
-                    </div>
                 </div>
 
                 <div class='btn'>
@@ -69,17 +67,17 @@
                         <label for="term">I agree to term</label>
                     </div>
 
-                    <div class="btn btn__submit ">
+                    <div class="btn btn__submit--register ">
                         <div>
-                            <input class="btn__submit btn__submit--login" type="submit" value="Register" />
+                            <input class="btn__submit--register" type="submit" value="Register" />
                         </div>
                     </div>
                 </div>
-
-                <div class="link link__back">
-                    <a href="/">Back to Login Screen</a>
-                </div>
             </form>
+
+            <div class="link link__back">
+                <a href="/">Back to Login Screen</a>
+            </div>
             @if (session()->has('notmatch'))
                 <script>
                     alert('{{ session('notmatch') }}');

@@ -33,6 +33,8 @@ class LoginController extends Controller
         )) {
             $request->session()->regenerate();
 
+            // dd(User::all()); 
+
             if (Gate::allows('isAdmin')) {
                 return redirect(route('admin'));
             } elseif (Gate::allows('isUser')) {

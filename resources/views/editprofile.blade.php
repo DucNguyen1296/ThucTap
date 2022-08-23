@@ -50,9 +50,9 @@
                 </div>
 
                 <div class='btn'>
-                    <div class="btn btn__submit ">
+                    <div class="btn btn__submit--edit ">
                         <div>
-                            <input class="btn__submit btn__submit--login" type="submit" value="Update" />
+                            <input class="btn__submit btn__submit--edit" type="submit" value="Update" />
                         </div>
                     </div>
                 </div>

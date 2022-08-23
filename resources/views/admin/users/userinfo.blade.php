@@ -9,8 +9,8 @@
 </head>
 
 <body>
-    <h1>Hello</h1>
-    <div>{{Session::get('success')}}</div>
+    <h1>Thông tin các users</h1>
+    <div>{{ Session::get('success') }}</div>
     <table class="table" border="#000" cellpadding="20">
         <tr class="table__header">
             <th>ID</th>
@@ -30,11 +30,10 @@
                 <th>{{ $us->location }}</th>
                 <th>{{ $us->title }}</th>
                 <th>
-                    <form action="/admin_edit_user">
+
+                    <form action="{{ url('/user_edit_index', ['id' => $us->id]) }}">
                         @csrf
-                        <div>
-                            <input type="submit" name="edit" value="Edit">
-                        </div>
+                        <input type="submit" value="Edit">
                     </form>
 
                     <form action="{{ route('admin.user.delete', ['id' => $us->id]) }}" method="POST">

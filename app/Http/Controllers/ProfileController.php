@@ -22,10 +22,12 @@ class ProfileController extends Controller
         // $data = Post::where('user_id', $user->id)->get();
         // dd($user);
 
-        $data = $user->posts;
+        $post = $user->posts;
         $avatar = $user->avatars;
+        $file = $user->upload_files;
+
         // dd($avatar->avatar_name);
         // dd($data);
-        return view('/profile', ['user' => $user, 'data' => $data, 'avatar' => $avatar]);
+        return view('/profile', ['user' => $user, 'post' => $post, 'avatar' => $avatar, 'file' => $file]);
     }
 }

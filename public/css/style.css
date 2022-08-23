@@ -42,7 +42,7 @@ body {
     margin-bottom: 5rem;
     background-color: #fff;
     width: 25%;
-    height: 40rem;
+    height: 100%;
     margin-left: 30rem;
 }
 
@@ -55,6 +55,11 @@ body {
     text-align: center;
     margin-bottom: 2rem;
     margin-top: 2rem;
+}
+
+.form__group--avatar {
+    font-size: 1rem;
+    margin-bottom: 1rem;
 }
 
 /* INPUT */
@@ -71,19 +76,42 @@ body {
 /* BUTTON */
 .btn {
     display: inline-block;
-    text-align: center;
 }
 
 .btn__submit {
     width: 5rem;
     height: 2rem;
     font-weight: bold;
-    margin-left: 1rem;
 }
 
 .btn__submit--login {
-    display: block;
-    width: 100%;
+    width: 5rem;
+    height: 2rem;
+    font-weight: bold;
+    margin-left: 4rem;
+}
+
+.btn__submit--register {
+    width: 5rem;
+    height: 2rem;
+    font-weight: bold;
+    margin-left: 2rem;
+}
+
+.btn__submit--edit {
+    position: relative;
+    width: 5rem;
+    height: 2rem;
+    font-weight: bold;
+    margin-left: 50%;
+}
+
+.btn__submit--changepsw {
+    position: relative;
+    width: 5rem;
+    height: 2rem;
+    font-weight: bold;
+    margin-left: 50%;
 }
 
 .btn__checkbox {
@@ -161,7 +189,7 @@ ul {
     padding: 1rem;
     margin: 2rem;
     border: 2px solid #000;
-    height: 30rem;
+    width: 30rem;
 }
 
 .post__box {
@@ -170,14 +198,40 @@ ul {
 
 .post__box--content {
     height: 25vh;
-    width: 50vh;
+    width: 100%;
 }
 
 .post__show {
     border: 2px solid #000;
-    width: 20rem;
     margin-top: 2rem;
     height: 20rem;
+}
+
+.post__show--header {
+    font-size: 1rem;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: #000 solid;
+}
+
+.post__row--content {
+    padding-top: 0.5rem;
+}
+
+.post__row--button {
+    padding-top: 0.5rem;
+    display: flex;
+    justify-content: space-around;
+}
+
+.post__update {
+    text-align: center;
+    margin: 10rem 20rem;
+    border: #000 solid;
+}
+
+.post__update--header {
+    font-size: 2rem;
 }
 
 /* User Profile */
@@ -211,4 +265,34 @@ ul {
 
 .row__two {
     display: flex;
+}
+
+/* INPUT FILE */
+/* Input avatar */
+/* input#avatar_input {
+    display: none;
+} */
+.avatar__img {
+    text-align: center;
+}
+
+/* Input image */
+.image__show {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    border: solid 2px #000;
+    width: 300px;
+    text-align: center;
+}
+
+.image__show--header {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+    border-bottom: #000 solid;
+}
+
+.image__show--element {
+    margin: 1rem;
 }

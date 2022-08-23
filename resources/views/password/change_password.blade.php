@@ -30,26 +30,24 @@
                 <div class="container">
 
                     <div class="form__group">
-                        <input type="text" name="old_password" class="form__input" placeholder="Old Password"
+                        <input type="password" name="old_password" class="form__input" placeholder="Old Password"
                             required />
                     </div>
 
                     <div class="form__group">
-                        <input type="text" name="new_password" class="form__input" placeholder="New Password"
+                        <input type="password" name="new_password" class="form__input" placeholder="New Password"
                             required />
                     </div>
 
                     <div class="form__group">
-                        <input type="text" name="retype_newpassword" class="form__input"
+                        <input type="password" name="retype_newpassword" class="form__input"
                             placeholder="Confirm New Password" required />
                     </div>
 
                 </div>
                 <div class='btn'>
-                    <div class="btn btn__submit ">
-                        <div>
-                            <input class="btn__submit btn__submit--login" type="submit" value="Submit" />
-                        </div>
+                    <div class="btn btn__submit--changepsw ">
+                        <input class="btn__submit btn__submit--changepsw" type="submit" value="Submit" />
                     </div>
                 </div>
 

@@ -85,17 +85,17 @@
             <div>
                 <form action="/avatar" enctype="multipart/form-data" method="POST">
                     @csrf
-                    <div class="btn btn__post">
-                        <label for="">Add your avatar</label>
-                        <input class="btn__post--post" type="file" name="avatar" />
+                    <div class="btn btn__avatar">
+                        <label for="avatar_input">Add your avatar</label>
+                        <input id="avatar_input" type="file" name="avatar" />
                     </div>
-                    <div class="btn btn__post">
+                    <div class="btn btn__avatar">
                         <input class="btn__post--upload" type="submit" value="Đăng" />
                     </div>
                 </form>
-                <div>
-                    <img src="{{ asset('/storage/avatar/' . $avatar->avatar_name) }}" height="200px" width="300px"
-                        alt="Your avatar">
+                <div class="avatar__img">
+                    <img src="{{ asset('/storage/avatar/' . ($avatar->avatar_name ?? 'default.png')) }}" height="200px"
+                        width="300px" alt="Your avatar">
                 </div>
             </div>
 
@@ -112,7 +112,7 @@
                             placeholder="Bạn đang nghĩ gì?"></textarea>
                     </div>
                     <div class="btn btn__post">
-                        <input class="btn__post--post" type="submit" value="Đăng" />
+                        <input class="btn__post--post" type="submit" value="Post" />
                     </div>
 
 
@@ -124,18 +124,67 @@
                         <input class="btn__post--post" type="file" name="image" />
                     </div>
                     <div class="btn btn__post">
-                        <input class="btn__post--upload" type="submit" value="Đăng" />
+                        <input class="btn__post--upload" type="submit" value="Post image" />
                     </div>
                 </form>
             </div>
             <div class="post__show">
-                @foreach ($data as $dt)
-                    {{ $dt->post }}.</br>
-                @endforeach
+                <div class="post__show--header">
+                    Your posts
+                </div>
+                <div class="post__row">
+                    @foreach ($post as $pt)
+                        <div class="post__row--content">
+                            {{ $pt->post }}
+                        </div>
+                        <div class="post__row--button">
+                            <div class="post__row--update">
+                                <form action="{{ url('/post', ['id' => $pt->id]) }}">
+                                    @csrf
+                                    <input type="submit" value="Update post">
+                                </form>
+                            </div>
+                            <div class="post__row--delete">
+                                <form action="{{ route('user.post.delete', ['id' => $pt->id]) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <div>
+                                        <input type="submit" value="Delete post">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
-        <div class="#">
-            Hello
+        <div class="image__show">
+            <div class="image__show--header">
+                Your images
+            </div>
+            @foreach ($file as $fl)
+                <img class="image__show--element" src="{{ asset('/storage/file_upload/' . $fl->file_name) }}"
+                    height="150px" width="200px" alt="Your picture">
+                <form action="{{ route('user.file.delete', ['id' => $fl->id]) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <div>
+                        <input type="submit" value="Delete">
+                    </div>
+                </form>
+
+                <form action="{{ route('user.file.update', ['id' => $fl->id]) }}" enctype="multipart/form-data"
+                    method="POST">
+                    @csrf
+                    <div class="btn btn__post">
+                        <label for=""></label>
+                        <input class="btn__post--post" type="file" name="update_img" required />
+                    </div>
+                    <div class="btn btn__post">
+                        <input class="btn__post--upload" type="submit" value="Update Image" />
+                    </div>
+                </form>
+            @endforeach
         </div>
     </div>
 </body>

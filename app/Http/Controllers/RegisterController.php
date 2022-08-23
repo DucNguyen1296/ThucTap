@@ -21,13 +21,22 @@ class RegisterController extends Controller
         $date = $request->input('date');
         $location = $request->input('location');
         $title = $request->input('title');
+        $term = $request->input('term');
 
         $validate = $request->validate([
-            'email' => 'required||email:filter',
+            'email' => 'required|unique:users,email|email:filter',
             'password' => 'required||min:3',
-            'name' => 'required',
+            'name' => 'required|unique:users,name',
+            'term' => 'required'
         ]);
 
+
+        // $datas = User::all();
+        // foreach ($datas as $data) {
+        //     if ($email == $data->email) {
+        //         Session::flash('')
+        //     }
+        // }
 
         if ($password == $repassword) {
             User::create([

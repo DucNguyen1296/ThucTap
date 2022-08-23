@@ -11,12 +11,18 @@
 <body>
     <h1>Đây là trang quản trị admin</h1>
     <p>Xin chào {{ $admin_data->name }}</p>
+    
 
     <a href="/user_info">Users Controll</a>
 
     <div class='logout'>
         <a href="/logout">Đăng xuất</a>
     </div>
+    @if (session()->has('admin_index'))
+        <script>
+            alert('{{ session('admin_index') }}');
+        </script>
+    @endif
 </body>
 
 </html>
