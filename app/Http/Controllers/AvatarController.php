@@ -11,20 +11,14 @@ use Illuminate\Support\Facades\Storage;
 class AvatarController extends Controller
 {
     //
-    public function avatar(Request $request)
+    public function avatar($id)
     {
-        $user = Auth::user();
-
-        $name = $request->file('default')->hashName();
-        $path = $request->file('default')->storeAs('public/avatar', $name);
-
-        $avatar = Avatar::create([
-            'user_id' => $user->id,
-            'avatar_name' => $name,
-            'avatar_path' => $path
+        // dd($id);
+        return Avatar::create([
+            'user_id' => $id,
+            'avatar_name' => 'default.png',
+            'avatar_path' => 'public/avatar/default.png'
         ]);
-
-        return redirect()->route('user.profile', ['name' => $user->name]);
     }
 
     public function avatar_update(Request $request)
@@ -36,7 +30,9 @@ class AvatarController extends Controller
         ]);
 
         $old_avatar = $user->avatars;
-        Storage::delete('public/avatar/' . $old_avatar->avatar_name);
+        if ($old_avatar->avatar_name != 'default.png') {
+            Storage::delete('public/avatar/' . $old_avatar->avatar_name);
+        }
 
         // $name = $request->file('avatar')->getClientOriginalName();
         $name = $request->file('avatar')->hashName();

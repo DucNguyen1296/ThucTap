@@ -47,6 +47,10 @@ class RegisterController extends Controller
                 'location' => $location,
                 'title' => $title
             ]);
+
+            $id = User::where('email', $email)->first()->id;
+            // dd($id);
+            app('App\Http\Controllers\AvatarController')->avatar($id);
             // session()->flash('regiscorrect', 'Đăng ký thành công');
             Session::flash('regiscorrect', 'Đăng ký thành công');
             return redirect('/');

@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\AdminToolController;
 use App\Http\Controllers\Admin\AdminLoginController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\AvatarController;
+use App\Http\Controllers\Main\MainController;
 use App\Http\Controllers\UploadFileController;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\MyMiddleWare;
@@ -34,7 +35,13 @@ use App\Http\Middleware\MyMiddleWare;
 
 Route::get('/', function () {
     return view('welcome');
-})->name('default');
+});
+
+Route::get('/main/{id?}', [MainController::class, 'main_index'])->name('default');
+
+Route::get('/welcome', function () {
+    return view('welcome');
+});
 
 Route::get('/login', function () {
     return view('welcome');

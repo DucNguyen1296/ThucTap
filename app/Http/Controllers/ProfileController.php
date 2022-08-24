@@ -26,6 +26,7 @@ class ProfileController extends Controller
         $avatar = $user->avatars;
         $file = $user->upload_files;
 
+        
         // dd($avatar->avatar_name);
         // dd($data);
         return view('/profile', ['user' => $user, 'post' => $post, 'avatar' => $avatar, 'file' => $file]);

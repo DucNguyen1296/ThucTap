@@ -94,8 +94,8 @@
                     </div>
                 </form>
                 <div class="avatar__img">
-                    <img src="{{ asset('/storage/avatar/' . ($avatar->avatar_name ?? 'default.png')) }}" height="200px"
-                        width="300px" alt="Your avatar">
+                    <img src="{{ asset('/storage/avatar/' . $avatar->avatar_name) }}" height="200px" width="300px"
+                        alt="Your avatar">
                 </div>
             </div>
 
