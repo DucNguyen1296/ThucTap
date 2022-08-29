@@ -16,7 +16,12 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->string('post');
+            $table->string('title')->nullable();
+            $table->string('post')->nullable();
+            $table->string('link')->nullable();
+            $table->string('link_image')->nullable();
+            $table->string('image_name')->nullable();
+            $table->string('image_path')->nullable();
             $table->timestamps();
             // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

@@ -102,13 +102,13 @@ Route::delete('/delete_post/{id}', [PostController::class, 'delete_post'])->name
 Route::post('/avatar', [AvatarController::class, 'avatar_update']);
 
 // Route to Upload file
-Route::post('/upload', [UploadFileController::class, 'upload_img']);
+// Route::post('/upload', [UploadFileController::class, 'upload_img']);
 
 // Route to Update file
 Route::post('/update_file/{id}', [UploadFileController::class, 'update_img'])->name('user.file.update');
 
 // Route Delete File Upload
-Route::delete('/delete_file/{id}', [UploadFileController::class, 'delete_img'])->name('user.file.delete');
+// Route::delete('/delete_file/{id}', [UploadFileController::class, 'delete_img'])->name('user.file.delete');
 
 
 ///////// ////////USER ROUTE /////////////////////

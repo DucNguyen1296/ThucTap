@@ -19,16 +19,11 @@ class ProfileController extends Controller
     public function index()
     {
         $user = Auth::user();
-        // $data = Post::where('user_id', $user->id)->get();
-        // dd($user);
 
         $post = $user->posts;
-        $avatar = $user->avatars;
-        $file = $user->upload_files;
 
-        
-        // dd($avatar->avatar_name);
-        // dd($data);
-        return view('/profile', ['user' => $user, 'post' => $post, 'avatar' => $avatar, 'file' => $file]);
+        $avatar = $user->avatars;
+        // $file = $user->upload_files;
+        return view('/profile', ['user' => $user, 'post' => $post, 'avatar' => $avatar]);
     }
 }

@@ -34,17 +34,26 @@
                             <a href="#">Heading 4</a>
                         </li>
                     </ul>
-                    <div class="main__button">
-                        <a href="/login">
-                            <div class="button">
-                                <button>Đăng nhập</button>
+                    <div class="main__login">
+                        @if (Auth::check())
+                            <div class="main__login--user">
+                                <a href="/profile"> {{ Auth::user()->name }}</a>
+                                <a href="/logout"> /Đăng xuất</a>
                             </div>
-                        </a>
-                        <a href="/register">
-                            <div class="button">
-                                <button>Đăng ký</button>
+                        @else
+                            <div class="main__login--button">
+                                <a href="/login">
+                                    <div class="button">
+                                        <button>Đăng nhập</button>
+                                    </div>
+                                </a>
+                                <a href="/register">
+                                    <div class="button">
+                                        <button>Đăng ký</button>
+                                    </div>
+                                </a>
                             </div>
-                        </a>
+                        @endif
                     </div>
                 </div>
             </nav>
@@ -61,6 +70,12 @@
                         </div>
                         <div class="post__feed--item----title">
                             {{ $post->post }}
+                        </div>
+                        <div class="post__feed--item----image">
+                            @if ($post->image_name != null)
+                                <img src="{{ asset('/storage/post_image/' . $post->image_name) }}" alt="Image"
+                                    height="150px" width="200px">
+                            @endif
                         </div>
                     </div>
                 @endforeach

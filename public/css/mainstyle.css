@@ -48,6 +48,11 @@ a {
     padding: 0.5rem 1rem;
 }
 
+/* MAIN LOGIN */
+.main__login--user {
+    font-size: 1rem;
+}
+
 .button {
     display: inline-block;
     padding-right: 1rem;

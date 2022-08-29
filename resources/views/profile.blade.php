@@ -14,7 +14,9 @@
     <div class="nav">
         <nav>
             <div class="nav__header">
-                <h2>Xin chào {{ $user->name }} </h2>
+                <h2>
+                    <a href="/main">Trang chủ</a>
+                </h2>
                 <div class="nav__link">
                     <ul>
                         <li>
@@ -105,28 +107,44 @@
                 {{ $user->name }} ơi, bạn đang nghĩ gì thế?
             </div>
             <div>
-                <form action="/post" method="POST">
+                <form action="/post" method="POST" enctype="multipart/form-data">
                     @csrf
+                    <div>
+                        <input type="text" name="title" placeholder="Tiêu đề">
+                    </div>
                     <div class="post__box">
                         <textarea name="post" class="post__box--content" style="resize:none" cols="30" rows="5"
-                            placeholder="Bạn đang nghĩ gì?"></textarea>
+                            placeholder="Bạn đang nghĩ gì?" id="post__text"></textarea>
                     </div>
+                    <div class="post__url">
+                        <input class="post__url--preview" type="url" name="link" placeholder="Link"
+                            value="">
+                        <button class="view__click"> Click</button>
+                    </div>
+                    <div>
+                        <img id="image_preview" height="50px" width="50px" />
+                    </div>
+                    <div class="btn btn__post">
+                        <label for="image">Add image to your Post</label>
+                        <input class="btn__post--post" id="image" type="file" name="image"
+                            onchange="loadFile(event)" />
+                    </div>
+
                     <div class="btn btn__post">
                         <input class="btn__post--post" type="submit" value="Post" />
                     </div>
 
-
                 </form>
-                <form action="/upload" enctype="multipart/form-data" method="POST">
+                {{-- <form action="/upload" enctype="multipart/form-data" method="POST">
                     @csrf
                     <div class="btn btn__post">
                         <label for="">Add image</label>
-                        <input class="btn__post--post" type="file" name="image" />
+                        <input class="btn__post--post" type="file" name="image_name" />
                     </div>
                     <div class="btn btn__post">
                         <input class="btn__post--upload" type="submit" value="Post image" />
                     </div>
-                </form>
+                </form> --}}
             </div>
             <div class="post__show">
                 <div class="post__show--header">
@@ -135,7 +153,25 @@
                 <div class="post__row">
                     @foreach ($post as $pt)
                         <div class="post__row--content">
+
+                            {{-- <script>
+                                urlify({{ $pt->post }})
+                            </script> --}}
+
                             {{ $pt->post }}
+
+
+                        </div>
+                        <div>
+                            <a href="{{ $pt->link }}">{{ $pt->link }}</a>
+                            {{-- {{ $pt->link }} --}}
+                            <img src="{{ $img }}" alt="">
+                        </div>
+                        <div class="post__row--image">
+                            @if ($pt->image_name != null)
+                                <img src="{{ asset('/storage/post_image/' . $pt->image_name) }}" alt="Image"
+                                    height="50px" width="50px">
+                            @endif
                         </div>
                         <div class="post__row--button">
                             <div class="post__row--update">
@@ -158,7 +194,7 @@
                 </div>
             </div>
         </div>
-        <div class="image__show">
+        {{-- <div class="image__show">
             <div class="image__show--header">
                 Your images
             </div>
@@ -185,7 +221,7 @@
                     </div>
                 </form>
             @endforeach
-        </div>
+        </div> --}}
     </div>
 </body>
 @if (session()->has('correct'))
@@ -205,5 +241,30 @@
         alert('{{ session('change_password') }}');
     </script>
 @endif
+
+<script>
+    let loadFile = function(event) {
+        let image_preview = document.getElementById('image_preview');
+        image_preview.src = URL.createObjectURL(event.target.files[0]);
+        // console.log(image_preview);
+    };
+
+    function urlify(text) {
+        let urlRegex = /(https?:\/\/[^\s]+)/g;
+        return text.replace(urlRegex, function(url) {
+            return '<a href="' + url + '">' + url + '</a>';
+        });
+    }
+
+    function getUrl(url) {
+        let url_preview = document.querySelector('.post__url--preview');
+        let click_preview = document.querySelector('.view__click');
+        click_preview.addEventListener('click', function() {
+            console.log(url_preview.getAtrribute('id'));
+        });
+    }
+</script>
+
+
 
 </html>

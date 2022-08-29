@@ -15,11 +15,24 @@
             Update Post
         </h1>
         <div class="post__update--content">
-            <form action="{{ route('user.post.update', ['id' => $post->id]) }}" method="POST">
+            <form action="{{ route('user.post.update', ['id' => $post->id]) }}" enctype="multipart/form-data"
+                method="POST">
                 @csrf
                 <div class="form__group">
                     <input type="text" name="content" class="form__input" placeholder="Content"
                         value="{{ $post->post }}" required />
+                </div>
+
+                @if ($post->image_name != null)
+                    <div class="post__row--image">
+                        <img src="{{ asset('/storage/post_image/' . $post->image_name) }}" alt="Image" height="50px"
+                            width="50px">
+                    </div>
+                @endif
+
+                <div class="btn btn__post">
+                    <label for="">Add image</label>
+                    <input class="btn__post--post" type="file" name="update_img" />
                 </div>
                 <div class="post__update--button">
                     <input class="btn" type="submit" value="Update post" />
