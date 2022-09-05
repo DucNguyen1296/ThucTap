@@ -13,17 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('replies', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->string('title')->nullable();
-            $table->text('post')->nullable();
-            $table->string('link')->nullable();
-            $table->string('link_image')->nullable();
-            $table->string('image_name')->nullable();
-            $table->string('image_path')->nullable();
+            $table->integer('post_id')->unsigned();
+            $table->integer('comment_id')->unsigned();
+            $table->text('reply')->nullable();
             $table->timestamps();
-            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -34,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('replies');
     }
 };

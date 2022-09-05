@@ -15,8 +15,7 @@ class PostController extends Controller
     public function post_index($id)
     {
         $post = Post::where('id', $id)->first();
-        // dd($post);
-        return view('post', ['post' => $post]);
+        return view('post_update', ['post' => $post]);
     }
 
     public function post(Request $request)
@@ -26,33 +25,36 @@ class PostController extends Controller
         $post = $request->input('post');
         $link = $request->input('link');
 
-        // dd($link);
-        $url = file_get_contents('https://vnexpress.net/nga-noi-se-dam-phan-neu-ukraine-dau-hang-vo-dieu-kien-4504917.html');
-        // dd($url);
-        $DOM = new DOMDocument('1.0', 'UTF-8');
+        Post::create([
+            'user_id' => $user->id,
+            'title' => $title,
+            'post' => $post,
+            'link' => $link,
+        ]);
 
-        $internalErrors = libxml_use_internal_errors(true);
+        if ($request->filled('link')) {
+            $url = file_get_contents($link);
 
-        $DOM->loadHTML($url);
+            $DOM = new DOMDocument('1.0', 'UTF-8');
+            $internalErrors = libxml_use_internal_errors(true);
+            $DOM->loadHTML($url);
+            libxml_use_internal_errors($internalErrors);
+            $imgs = $DOM->getElementsByTagName('img');
 
-        libxml_use_internal_errors($internalErrors);
+            // $title = $DOM->getElementsByTagName('title');
 
-        // dd($DOM);
-
-        $Content = $DOM->getElementsByTagName('img');
-
-        // dd($Content);
-
-        foreach ($Content as $content) {
-            // Log::channel('custom')->info($content->getAttribute('data-src'));
-            // $img = $content->getAttribute('data-src');
-            if ($content->getAttribute('data-src') != "") {
-                $img = $content->getAttribute('data-src');
-                // dd($img);
+            foreach ($imgs as $img) {
+                // Log::channel('custom')->info($content->getAttribute('data-src'));
+                if ($img->getAttribute('data-src') != "") {
+                    $link_img = $img->getAttribute('data-src');
+                }
             }
-        }
-        // dd($img);
 
+            Post::where('title', $title)->update([
+                'link' => $link,
+                'link_image' => $link_img
+            ]);
+        }
 
         if ($request->hasFile('image')) {
             $validated = $request->validate([
@@ -62,24 +64,14 @@ class PostController extends Controller
             $name = $request->file('image')->hashName();
             $path = $request->file('image')->storeAs('public/post_image', $name);
 
-            Post::create([
-                'user_id' => $user->id,
-                'title' => $title,
-                'post' => $post,
-                'link' => $link,
+            Post::where('title', $title)->update([
                 'image_name' => $name,
                 'image_path' => $path
             ]);
-        } else {
-            Post::create([
-                'user_id' => $user->id,
-                'title' => $title,
-                'post' => $post,
-                'link' => $link
-            ]);
         }
 
-        return redirect()->route('user.profile', ['name' => $user->name, $img]);
+
+        return redirect()->route('user.profile', ['name' => $user->name]);
     }
 
     public function update_post(Request $request, $id)
@@ -97,7 +89,7 @@ class PostController extends Controller
 
             $name = $request->file('update_img')->hashName();
             $path = $request->file('update_img')->storeAs('public/post_image', $name);
-            // dd($request->all());
+
             Post::where('id', $id)->update(
                 [
                     'post' => $update_post,
@@ -120,7 +112,6 @@ class PostController extends Controller
     {
         $user = Auth::user();
         $post = $user->posts->first();
-        // dd($post);
         Storage::delete('public/post_image/' . $post->image_name);
         Post::where('id', $id)->firstOrFail()->delete();
         return redirect()->route('user.profile', ['name' => $user->name]);

@@ -53,7 +53,7 @@ class RegisterController extends Controller
             app('App\Http\Controllers\AvatarController')->avatar($id);
             // session()->flash('regiscorrect', 'Đăng ký thành công');
             Session::flash('regiscorrect', 'Đăng ký thành công');
-            return redirect('/');
+            return redirect(route('login'));
         } else {
             // session()->flash('notmatch', 'Mật khẩu không khớp, xin nhập lại');
             Session::flash('notmatch', 'Mật khẩu không khớp, xin nhập lại');

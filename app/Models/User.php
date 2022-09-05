@@ -27,6 +27,16 @@ class User extends Authenticatable
         return $this->hasOne(Avatar::class);
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function replys()
+    {
+        return $this->hasMany(Reply::class);
+    }
+
 
     public $timestamps = false;
     /**

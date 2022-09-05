@@ -96,8 +96,7 @@
                     </div>
                 </form>
                 <div class="avatar__img">
-                    <img src="{{ asset('/storage/avatar/' . $avatar->avatar_name) }}" height="200px" width="300px"
-                        alt="Your avatar">
+                    <img src="{{ asset('/storage/avatar/' . $avatar->avatar_name) }}" alt="Your avatar">
                 </div>
             </div>
 
@@ -119,7 +118,7 @@
                     <div class="post__url">
                         <input class="post__url--preview" type="url" name="link" placeholder="Link"
                             value="">
-                        <button class="view__click"> Click</button>
+
                     </div>
                     <div>
                         <img id="image_preview" height="50px" width="50px" />
@@ -150,8 +149,22 @@
                 <div class="post__show--header">
                     Your posts
                 </div>
-                <div class="post__row">
-                    @foreach ($post as $pt)
+                @foreach ($post as $pt)
+                    <div class="post__row">
+                        <div class="post__row--head">
+                            <div class="post__row--head--avatar">
+                                <img src="{{ asset('/storage/avatar/' . $user->avatars->avatar_name) }}"
+                                    alt="avatar">
+                            </div>
+                            <div class="post__row--head--info">
+                                {{ $user->name }}
+                            </div>
+                        </div>
+
+                        <div class="post__row--title">
+                            {{ $pt->title }}
+                        </div>
+
                         <div class="post__row--content">
 
                             {{-- <script>
@@ -162,17 +175,21 @@
 
 
                         </div>
-                        <div>
-                            <a href="{{ $pt->link }}">{{ $pt->link }}</a>
-                            {{-- {{ $pt->link }} --}}
-                            <img src="{{ $img }}" alt="">
-                        </div>
-                        <div class="post__row--image">
-                            @if ($pt->image_name != null)
-                                <img src="{{ asset('/storage/post_image/' . $pt->image_name) }}" alt="Image"
-                                    height="50px" width="50px">
-                            @endif
-                        </div>
+                        @if ($pt->link != null)
+                            <div class="post__row--link">
+                                <a href="{{ $pt->link }}">{{ $pt->link }}
+                                    <div class="post__row--link----image">
+                                        <img src="{{ $pt->link_image }}" alt="" />
+                                        <div></div>
+                                    </div>
+                                </a>
+                            </div>
+                        @endif
+                        @if ($pt->image_name != null)
+                            <div class="post__row--image">
+                                <img src="{{ asset('/storage/post_image/' . $pt->image_name) }}" alt="Image" />
+                            </div>
+                        @endif
                         <div class="post__row--button">
                             <div class="post__row--update">
                                 <form action="{{ url('/post', ['id' => $pt->id]) }}">
@@ -190,8 +207,8 @@
                                 </form>
                             </div>
                         </div>
-                    @endforeach
-                </div>
+                    </div>
+                @endforeach
             </div>
         </div>
         {{-- <div class="image__show">

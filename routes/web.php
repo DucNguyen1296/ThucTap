@@ -17,7 +17,9 @@ use App\Http\Controllers\Admin\AdminToolController;
 use App\Http\Controllers\Admin\AdminLoginController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\AvatarController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Main\MainController;
+use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\UploadFileController;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\MyMiddleWare;
@@ -34,17 +36,13 @@ use App\Http\Middleware\MyMiddleWare;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('login');
 });
 
 Route::get('/main/{id?}', [MainController::class, 'main_index'])->name('default');
 
-Route::get('/welcome', function () {
-    return view('welcome');
-});
-
 Route::get('/login', function () {
-    return view('welcome');
+    return view('login');
 })->name('login');
 
 // Route register
@@ -110,6 +108,17 @@ Route::post('/update_file/{id}', [UploadFileController::class, 'update_img'])->n
 // Route Delete File Upload
 // Route::delete('/delete_file/{id}', [UploadFileController::class, 'delete_img'])->name('user.file.delete');
 
+// Route to Comment
+Route::post('/comment/{id}', [CommentController::class, 'comment'])->name('user.post.comment');
+
+// Route to Delete Comment
+Route::delete('/delete_comment/{id}', [CommentController::class, 'comment_delete'])->name('user.comment.delete');
+
+// Route to Update Comment
+Route::post('/update_comment/{id}', [CommentController::class, 'comment_update'])->name('user.comment.update');
+
+// Route to Reply Comment
+Route::post('/reply_comment/{id?}', [ReplyController::class, 'create'])->name('user.reply.create');
 
 ///////// ////////USER ROUTE /////////////////////
 ////////// GET ROUTE ///////////////
@@ -130,8 +139,11 @@ Route::get('change_password', [PasswordController::class, 'change_index']);
 // Route Log Out
 Route::get('/logout', [LogOutController::class, 'logout']);
 
+// Route to read the detail
+Route::get('/main_post/{id}', [MainController::class, 'main_post_detail'])->name('main.post.detail');
 
-
+// Route to show the user
+Route::get('/user/{id}', [MainController::class, 'main_user_detail'])->name('user.profile.detail');
 
 Route::get('/{id?}', function () {
     return redirect(route('default'));

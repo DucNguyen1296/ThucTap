@@ -1,0 +1,104 @@
+*,
+::after,
+::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 62.5%;
+    background-color: rgba(217, 206, 206, 0.336);
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.navigation {
+    background-color: #777;
+}
+
+.nav__header {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+}
+
+.nav__bar {
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.logo {
+    height: 2rem;
+}
+
+.link li {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.2rem;
+    display: inline-block;
+    padding: 0.5rem 1rem;
+}
+
+/* MAIN LOGIN */
+.main__login--user {
+    font-size: 1rem;
+}
+
+.main__login--user img {
+    width: 35px;
+    height: 35px;
+    clip-path: circle(50% at 50% 50%);
+}
+
+.button {
+    display: inline-block;
+    padding-right: 1rem;
+}
+
+/* CONTAINER BODY */
+.container {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+    margin-top: 2rem;
+}
+
+.container__advertise {
+    display: flex;
+    flex-direction: column;
+    width: 30rem;
+}
+
+.container__body {
+    border: #777 solid;
+}
+
+.container__body--header {
+    display: flex;
+    flex-direction: row;
+    width: 30rem;
+}
+
+.container__body--header img {
+    width: 50px;
+    height: 50px;
+    clip-path: circle(50% at 50% 50%);
+}
+
+.container__body--author--name {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.container__body--main {
+    font-size: 1rem;
+}
