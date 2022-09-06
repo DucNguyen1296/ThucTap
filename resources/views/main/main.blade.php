@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="{{ url('/css/mainstyle.css') }}">
-    <title>Trang tin tức</title>
+    <link rel="shortcut icon" type="image/png" href="{{ asset('/storage/logo/facebook.png') }}">
+    <title>FAKEBOOK</title>
 </head>
 
 <body>
@@ -16,7 +17,9 @@
                 <div class="nav__bar">
                     <!-- nav header -->
                     <div class="nav__header">
-                        <img src="{{ asset('/storage/logo/fakebook.png') }}" alt="logo" class="logo" />
+                        <a href="/main">
+                            <img src="{{ asset('/storage/logo/fakebook.png') }}" alt="logo" class="logo" />
+                        </a>
                     </div>
 
                     <!-- link -->
@@ -111,7 +114,7 @@
                                 <form action="{{ route('user.post.comment', ['id' => $post->id]) }}" method="POST">
                                     @csrf
                                     <textarea name="comment" id="" class="post__feed--content--box" style="resize:none"
-                                        placeholder="Viết bình luận" col="1"></textarea>
+                                        placeholder="Viết bình luận" col="1" required></textarea>
                                     <input type="submit" value="Comment">
                                 </form>
                             </div>
@@ -135,110 +138,164 @@
                                                         </div>
                                                         <div class="post__feed--main--box">
                                                             <div class="post__feed--main--box2">
-                                                                <div class="post__feed--comment--info">
-                                                                    <div>
-                                                                        {{ $us->name }}
-                                                                    </div>
-                                                                    <div>
-                                                                        {{ $comment->comment }}
-                                                                    </div>
-                                                                </div>
+                                                                <div class="post__feed--main--box3">
 
-                                                                @if (Auth::check())
-                                                                    @if (Auth::user()->id == $comment->user_id)
-                                                                        <div class="post__feed--comment--button">
-                                                                            <div class="post__feed--comment--delete">
-                                                                                <form
-                                                                                    action="{{ route('user.comment.delete', ['id' => $comment->id]) }}"
-                                                                                    method="POST">
-                                                                                    @csrf
-                                                                                    @method('DELETE')
-                                                                                    <div>
-                                                                                        <input type="submit"
-                                                                                            value="Delete">
-                                                                                    </div>
-                                                                                </form>
-                                                                            </div>
-                                                                            <div class="post__feed--comment--update">
-                                                                                <button class="show__modal">
-                                                                                    Update
-                                                                                </button>
-                                                                                <div class="modal hidden">
-                                                                                    <div class="modal__head">
-                                                                                        <button class="close__modal">
-                                                                                            &times;
-                                                                                        </button>
-                                                                                        <h2>
-                                                                                            Chỉnh sửa bình luận
-                                                                                        </h2>
-                                                                                    </div>
-                                                                                    <div class="modal__box">
-                                                                                        <form
-                                                                                            action="{{ route('user.comment.update', ['id' => $comment->id]) }}"
-                                                                                            method="POST">
-                                                                                            @csrf
-                                                                                            <input type="text"
-                                                                                                name="update_comment"
-                                                                                                class="form__input"
-                                                                                                placeholder="Content"
-                                                                                                value="{{ $comment->comment }}"
-                                                                                                required />
-                                                                                            <input
-                                                                                                class="modal__button--update"
-                                                                                                type="submit"
-                                                                                                value="Lưu">
-                                                                                        </form>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="overlay hidden"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                    @endif
-                                                                @endif
-                                                            </div>
-                                                            <div class="post__feed--reply">
-
-                                                                <form
-                                                                    action="{{ route('user.reply.create', ['id' => $comment->id]) }}"
-                                                                    method="POST">
-                                                                    @csrf
-                                                                    <input type="text" name="reply"
-                                                                        placeholder="Viết phản hồi">
-                                                                    <button type="submit">
-                                                                        Reply
-                                                                    </button>
-                                                                </form>
-
-                                                            </div>
-                                                            <div>
-                                                                {{-- @foreach ($users as $us) --}}
-                                                                {{-- @foreach ($comments->replies as $reply) --}}
-                                                                <ul>
-                                                                    <li>
+                                                                    <div class="post__feed--comment--info">
                                                                         <div>
-                                                                            <div>Avatar</div>
-                                                                            <div>
-                                                                                <div>
-                                                                                    <div>
-                                                                                        username
-                                                                                    </div>
-                                                                                    <div>
-                                                                                        reply content
-                                                                                        {{-- {{ $reply }} --}}
-                                                                                    </div>
+                                                                            {{ $us->name }}
+                                                                        </div>
+                                                                        <div>
+                                                                            {{ $comment->comment }}
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    @if (Auth::check())
+                                                                        @if (Auth::user()->id == $comment->user_id)
+                                                                            <div class="toggle"></div>
+                                                                            <div
+                                                                                class="post__feed--comment--button hidden">
+                                                                                <div
+                                                                                    class="post__feed--comment--delete">
+                                                                                    <form
+                                                                                        action="{{ route('user.comment.delete', ['id' => $comment->id]) }}"
+                                                                                        method="POST">
+                                                                                        @csrf
+                                                                                        @method('DELETE')
+                                                                                        <div>
+                                                                                            <input type="submit"
+                                                                                                value="Delete">
+                                                                                        </div>
+                                                                                    </form>
                                                                                 </div>
-                                                                                <div>
-                                                                                    Reply
+                                                                                <div
+                                                                                    class="post__feed--comment--update">
+                                                                                    <button class="show__modal">
+                                                                                        Update
+                                                                                    </button>
+                                                                                    <div class="modal hidden">
+                                                                                        <div class="modal__head">
+                                                                                            <button
+                                                                                                class="close__modal">
+                                                                                                &times;
+                                                                                            </button>
+                                                                                            <h2>
+                                                                                                Chỉnh sửa bình luận
+                                                                                            </h2>
+                                                                                        </div>
+                                                                                        <div class="modal__box">
+                                                                                            <form
+                                                                                                action="{{ route('user.comment.update', ['id' => $comment->id]) }}"
+                                                                                                method="POST">
+                                                                                                @csrf
+                                                                                                <input type="text"
+                                                                                                    name="update_comment"
+                                                                                                    class="form__input"
+                                                                                                    placeholder="Content"
+                                                                                                    value="{{ $comment->comment }}"
+                                                                                                    required />
+                                                                                                <input
+                                                                                                    class="modal__button--update"
+                                                                                                    type="submit"
+                                                                                                    value="Lưu">
+                                                                                            </form>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="overlay hidden"></div>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-                                                                    </li>
-                                                                </ul>
-                                                                {{-- @endforeach --}}
-                                                                {{-- @endforeach --}}
+                                                                        @elseif(Auth::user()->id == $post->user_id)
+                                                                            <div class="toggle"></div>
+                                                                            <div
+                                                                                class="post__feed--comment--button hidden">
+                                                                                <div
+                                                                                    class="post__feed--comment--delete">
+                                                                                    <form
+                                                                                        action="{{ route('user.comment.delete', ['id' => $comment->id]) }}"
+                                                                                        method="POST">
+                                                                                        @csrf
+                                                                                        @method('DELETE')
+                                                                                        <div>
+                                                                                            <input type="submit"
+                                                                                                value="Delete">
+                                                                                        </div>
+                                                                                    </form>
+                                                                                </div>
+                                                                            </div>
+                                                                        @endif
+                                                                    @endif
+                                                                </div>
+                                                                <div class="post__feed--reply">
+                                                                    <form
+                                                                        action="{{ route('user.reply.create', ['id' => $comment->id]) }}"
+                                                                        method="POST">
+                                                                        @csrf
+                                                                        <textarea type="text" name="reply" placeholder="Viết phản hồi" class="post__feed--content--box"
+                                                                            style="resize:none" col="1" required></textarea>
+                                                                        <button type="submit">
+                                                                            Reply
+                                                                        </button>
+                                                                    </form>
+
+                                                                </div>
+                                                                <div>
+                                                                    <ul>
+                                                                        @foreach ($users as $uss)
+                                                                            @foreach ($comment->replies as $reply)
+                                                                                @if ($uss->id == $reply->user_id)
+                                                                                    <li>
+                                                                                        <div class="post__feed--reply">
+                                                                                            <div
+                                                                                                class="post__feed--item--avatar">
+                                                                                                <img src="{{ asset('/storage/avatar/' . $uss->avatars->avatar_name) }}"
+                                                                                                    alt="avatar">
+                                                                                            </div>
+                                                                                            <div
+                                                                                                class="post__feed--reply--box">
+                                                                                                <div
+                                                                                                    class="post__feed--comment--info">
+                                                                                                    <div>
+                                                                                                        {{ $uss->name }}
+                                                                                                    </div>
+                                                                                                    <div>
+                                                                                                        {{ $reply->reply }}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                @if (Auth::check())
+                                                                                                    <div
+                                                                                                        class="toggle">
+                                                                                                    </div>
+                                                                                                    <div
+                                                                                                        class="post__feed--comment--button hidden">
+                                                                                                        <div
+                                                                                                            class="post__feed--comment--delete">
+                                                                                                            <form
+                                                                                                                action="{{ route('user.comment.delete', ['id' => $comment->id]) }}"
+                                                                                                                method="POST">
+                                                                                                                @csrf
+                                                                                                                @method('DELETE')
+                                                                                                                <div>
+                                                                                                                    <input
+                                                                                                                        type="submit"
+                                                                                                                        value="Delete">
+                                                                                                                </div>
+                                                                                                            </form>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                @endif
+                                                                                                {{-- <div>
+                                                                                                Reply
+                                                                                            </div> --}}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                @endif
+                                                                            @endforeach
+                                                                        @endforeach
+                                                                    </ul>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
                                                 </li>
                                             @endif
                                         @endforeach

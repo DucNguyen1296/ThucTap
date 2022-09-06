@@ -85,6 +85,19 @@
                 <div class="container__body--content">
                     {{ $post->post }}
                 </div>
+                <div>
+                    @if ($post->link != null || $post->link_image != null)
+                        <a href="{{ $post->link }}">{{ $post->link }}
+                            <img src="{{ $post->link_image }}" alt="">
+                        </a>
+                    @endif
+
+                    @if ($post->image_name != null)
+                        <div>
+                            <img src="{{ asset('/storage/post_image/' . $post->image_name) }}" alt="Image">
+                        </div>
+                    @endif
+                </div>
             </article>
         </div>
         <div class="container__advertise">

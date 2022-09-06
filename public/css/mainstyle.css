@@ -79,9 +79,7 @@ a {
 
 .post__feed {
     display: block;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    padding-top: 2rem;
+    padding: 2rem;
     width: 30rem;
 }
 
@@ -97,10 +95,16 @@ a {
     width: 100%;
 }
 
-.post__feed--main--box2 {
+/* .post__feed--main--box2 {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     width: 100%;
+} */
+
+.post__feed--main--box3 {
+    display: flex;
+    flex-direction: row;
 }
 
 .post__feed--item {
@@ -161,11 +165,25 @@ a {
     width: 100%;
 }
 
-/* Modal style */
-
-.show__modal {
-    /* font-size: 0.8rem; */
+/* Reply */
+.post__feed--reply {
+    display: flex;
+    flex-direction: row;
 }
+
+.post__feed--reply textarea {
+    border: #777 solid;
+    border-radius: 10px;
+    margin-top: 0.5rem;
+    width: 100%;
+}
+
+.post__feed--reply--box {
+    display: flex;
+    flex-direction: row;
+}
+
+/* Modal style */
 
 .close__modal {
     position: absolute;
@@ -226,4 +244,43 @@ a {
     padding: 0.5rem;
     width: 100%;
     height: 2.5rem;
+}
+
+.toggle {
+    /* position: fixed; */
+    width: 2rem;
+    height: 2rem;
+    background: white url("/storage/logo/menu.png");
+    background-size: 1rem;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    z-index: 1000;
+    border-radius: 20px;
+}
+
+.toggle:hover {
+    background: #777 url("/storage/logo/menu.png");
+    background-size: 1rem;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+}
+
+.toggle.active {
+    background: #0169b2 url("/storage/logo/close.png");
+    background-size: 1rem;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    z-index: 1000;
+    border-radius: 20px;
+}
+
+.toggle.active:hover {
+    background: #777 url("/storage/logo/close.png");
+    background-size: 1rem;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
 }

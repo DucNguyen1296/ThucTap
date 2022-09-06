@@ -19,7 +19,7 @@ class MainController extends Controller
         $posts = Post::all();
         $comments = Comment::all();
         $replies = Reply::all();
-        // dd($posts);
+        // dd($comments);
         return view('main.main', ['users' => $users, 'posts' => $posts, 'comments' => $comments, 'replies' => $replies]);
     }
 

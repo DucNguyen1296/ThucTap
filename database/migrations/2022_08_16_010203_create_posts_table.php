@@ -17,7 +17,7 @@ return new class extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->string('title')->nullable();
-            $table->text('post')->nullable();
+            $table->longText('post')->nullable();
             $table->string('link')->nullable();
             $table->string('link_image')->nullable();
             $table->string('image_name')->nullable();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Reply;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,21 +26,10 @@ class ReplyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, $id)
+    public function create(Request $request)
     {
         //
-        $user = Auth::user();
-        $comment = Comment::where('id', $id)->first();
-        $post = Post::where('id', $comment->post_id)->first();
-        // dd($comment->post_id);
-        $reply = $request->input('reply');
-        Reply::create([
-            'user_id' => $user->id,
-            'post_id' => $post->id,
-            'comment_id' => $comment->id,
-            'reply' => $reply
-        ]);
-        return redirect(route('default'));
+
     }
 
     /**
@@ -48,9 +38,26 @@ class ReplyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
         //
+        if (Auth::check()) {
+            $user = Auth::user();
+            $comment = Comment::where('id', $id)->first();
+            $post = Post::where('id', $comment->post_id)->first();
+            // dd($comment->post_id);
+            $reply = $request->input('reply');
+            Reply::create([
+                'user_id' => $user->id,
+                'post_id' => $post->id,
+                'comment_id' => $comment->id,
+                'reply' => $reply
+            ]);
+            return redirect(route('default'));
+        } else {
+            Session::flash('comment_session', 'Xin vui lòng đăng nhập trước khi bình luận');
+            return redirect()->back();
+        }
     }
 
     /**

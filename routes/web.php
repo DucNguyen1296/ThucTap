@@ -118,7 +118,7 @@ Route::delete('/delete_comment/{id}', [CommentController::class, 'comment_delete
 Route::post('/update_comment/{id}', [CommentController::class, 'comment_update'])->name('user.comment.update');
 
 // Route to Reply Comment
-Route::post('/reply_comment/{id?}', [ReplyController::class, 'create'])->name('user.reply.create');
+Route::post('/reply_comment/{id?}', [ReplyController::class, 'store'])->name('user.reply.create');
 
 ///////// ////////USER ROUTE /////////////////////
 ////////// GET ROUTE ///////////////
