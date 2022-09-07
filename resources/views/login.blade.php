@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="{{ url('/css/style.css') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('/storage/logo/facebook.png') }}">
     <title>Login Screen</title>
 </head>
 
@@ -44,7 +45,7 @@
 
                 <div class="link">
                     <div class="link link__password">
-                        <a href="#">Forgot your Password?</a>
+                        <a href="/forgot_password">Forgot your Password?</a>
                     </div>
 
                     <div class="link link__register">
@@ -63,6 +64,12 @@
             @if (session()->has('regiscorrect'))
                 <script>
                     alert('{{ session('regiscorrect') }}');
+                </script>
+            @endif
+
+            @if (session()->has('reset_password'))
+                <script>
+                    alert('{{ session('reset_password') }}');
                 </script>
             @endif
         </div>

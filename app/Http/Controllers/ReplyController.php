@@ -103,5 +103,8 @@ class ReplyController extends Controller
     public function destroy($id)
     {
         //
+        // Storage::delete('public/comment_image/' . $comment->image_name);
+        Reply::where('id', $id)->firstOrFail()->delete();
+        return redirect()->route('default');
     }
 }

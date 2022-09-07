@@ -16,6 +16,7 @@ class NewMail extends Mailable
      *
      * @return void
      */
+
     public $user;
 
     public function __construct($user)
@@ -31,6 +32,6 @@ class NewMail extends Mailable
      */
     public function build()
     {
-        return $this->subject("This is the testing mail")->view('email.test');
+        return $this->subject('Reset Your Password Mail')->view('password.email_password');
     }
 }

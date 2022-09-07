@@ -32,9 +32,7 @@ class CommentController extends Controller
 
     public function comment_delete($id)
     {
-        $user = Auth::user();
         $comment = Comment::where('id', $id)->first();
-        $post = Post::where('id', $comment->post_id)->first();
         // Storage::delete('public/comment_image/' . $comment->image_name);
         Comment::where('id', $id)->firstOrFail()->delete();
         return redirect()->route('default');

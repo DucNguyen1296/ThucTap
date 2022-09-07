@@ -23,6 +23,8 @@ use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\UploadFileController;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\MyMiddleWare;
+use App\Mail\NewMail;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,7 +75,6 @@ Route::post('/user_edit/{id}', [AdminToolController::class, 'user_edit'])->name(
 
 
 
-
 /////////////////////USER ROUTE ////////////////////////
 /////////// POST ROUTE ////////////////
 // Route Access
@@ -110,15 +111,12 @@ Route::post('/update_file/{id}', [UploadFileController::class, 'update_img'])->n
 
 // Route to Comment
 Route::post('/comment/{id}', [CommentController::class, 'comment'])->name('user.post.comment');
-
-// Route to Delete Comment
 Route::delete('/delete_comment/{id}', [CommentController::class, 'comment_delete'])->name('user.comment.delete');
-
-// Route to Update Comment
 Route::post('/update_comment/{id}', [CommentController::class, 'comment_update'])->name('user.comment.update');
 
-// Route to Reply Comment
+// Route to Reply
 Route::post('/reply_comment/{id?}', [ReplyController::class, 'store'])->name('user.reply.create');
+Route::delete('/delete_reply/{id}', [ReplyController::class, 'destroy'])->name('user.reply.delete');
 
 ///////// ////////USER ROUTE /////////////////////
 ////////// GET ROUTE ///////////////
@@ -144,6 +142,16 @@ Route::get('/main_post/{id}', [MainController::class, 'main_post_detail'])->name
 
 // Route to show the user
 Route::get('/user/{id}', [MainController::class, 'main_user_detail'])->name('user.profile.detail');
+
+/////// Mail
+
+//Route to forgot password
+Route::get('/forgot_password', [PasswordController::class, 'forgot_index'])->name('user.forgot.index');
+Route::post('/forgot_password', [PasswordController::class, 'forgot_send'])->name('user.forgot.send');
+
+//Route to reset password
+Route::get('/reset_password/{id}', [PasswordController::class, 'reset_index'])->name('user.reset.index');
+Route::post('/reset_password/{id?}', [PasswordController::class, 'reset_password'])->name('user.reset.password');
 
 Route::get('/{id?}', function () {
     return redirect(route('default'));
