@@ -7,6 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="{{ url('/css/mainstyle.css') }}">
     <link rel="shortcut icon" type="image/png" href="{{ asset('/storage/logo/facebook.png') }}">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Fakebook</title>
 </head>
 
@@ -86,17 +89,17 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="post__content--box modal hidden">
+                        <div class="post__content--box modal hidden" id="post__content--box">
                             <div>
                                 Tạo bài viết mới
                             </div>
                             <button class="close__modal">
                                 &times;
                             </button>
-                            <form action="/post" method="POST" enctype="multipart/form-data">
+                            <form action="/post" method="POST" enctype="multipart/form-data" id="post__button">
                                 @csrf
                                 <div>
-                                    <input type="text" name="title" placeholder="Tiêu đề">
+                                    <input type="text" name="title" placeholder="Tiêu đề" id="post__title">
                                 </div>
                                 <div class="post__box">
                                     <textarea name="post" class="post__box--content" style="resize:none" cols="30" rows="5"
@@ -104,7 +107,7 @@
                                 </div>
                                 <div class="post__url">
                                     <input class="post__url--preview" type="url" name="link" placeholder="Link"
-                                        value="">
+                                        value="" id="post__link">
 
                                 </div>
                                 <div>
@@ -125,7 +128,7 @@
                     </div>
                 @endif
 
-                <div class="post__feed">
+                <div class="post__feed" id="post__feed">
                     @foreach ($users as $user)
                         @foreach ($user->posts as $post)
                             <div class="post__feed--item">
@@ -353,6 +356,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        </div>
                                                     </li>
                                                 @endif
                                             @endforeach
@@ -382,6 +386,60 @@
         // console.log(image_preview);
     };
 </script>
+
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $('#post__button').submit(function(e) {
+        e.preventDefault();
+
+        let title = $('#post__title').val();
+        let post = $('#post__text').val();
+
+        $.ajax({
+            url: "{{ route('user.post') }}",
+            type: "POST",
+            data: {
+                title: title,
+                post: post
+            },
+            success: function(response) {
+                if (response) {
+                    $('#post__feed').prepend(
+                        '<div class="post__feed--item"><a href="{{ route('user.profile.detail', ['id' => Auth::user()->id]) }}"><div class="post__feed--item--head"><div class="post__feed--item--avatar"><img src="{{ asset('/storage/avatar/' . Auth::user()->avatars->avatar_name) }}" alt="avatar"></div><div class="post__feed--item--info">{{ Auth::user()->name }}</div></div></a> <div><a href="{{ route('default') }}">' +
+                        response
+                        .title + '</a></div><div class="post__feed--item--title">' +
+                        response.post + '</div></div>');
+                    $("#post__button")[0].reset();
+                    $(".post__content--box").hide();
+                    $(".overlay").hide();
+                    // location.reload();
+                }
+                $('.show__modal').click(function() {
+                    $(".post__content--box").show();
+                    $(".overlay").show();
+                });
+            }
+        })
+    });
+</script>
+
+
+{{-- <script>
+    function loadDoc() {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() {
+            document.getElementById('post__feed').innerHTML = this.responseText;
+        }
+        xhttp.open('GET', 'main.blade.php');
+        xhttp.send();
+        console.log(xhttp);
+    }
+</script> --}}
 @if (session()->has('comment_session'))
     <script>
         alert('{{ session('comment_session') }}');

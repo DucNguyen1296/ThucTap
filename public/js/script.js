@@ -25,7 +25,7 @@ for (let i = 0; i < btnsCloseModal.length; i++) {
 
 const menuToggle = document.querySelectorAll(".toggle");
 const commentButton = document.querySelectorAll(".post__feed--comment--button");
-console.log(commentButton);
+// console.log(commentButton);
 
 for (let i = 0; i < menuToggle.length; i++) {
     menuToggle[i].onclick = function () {

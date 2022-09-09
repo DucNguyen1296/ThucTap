@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
+use App\Models\User;
 use DOMDocument;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -25,7 +26,7 @@ class PostController extends Controller
         $post = $request->input('post');
         $link = $request->input('link');
 
-        Post::create([
+        $p = Post::create([
             'user_id' => $user->id,
             'title' => $title,
             'post' => $post,
@@ -69,9 +70,10 @@ class PostController extends Controller
                 'image_path' => $path
             ]);
         }
-
-
-        return redirect()->route('user.profile', ['name' => $user->name]);
+        
+        // dd($request->all());
+        return response()->json($p);
+        // return redirect()->route('user.profile', ['name' => $user->name]);
     }
 
     public function update_post(Request $request, $id)

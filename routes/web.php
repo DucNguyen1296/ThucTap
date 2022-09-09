@@ -41,7 +41,7 @@ Route::get('/', function () {
     return view('login');
 });
 
-Route::get('/main/{id?}', [MainController::class, 'main_index'])->name('default');
+
 
 Route::get('/login', function () {
     return view('login');
@@ -90,7 +90,7 @@ Route::post('/edit_profile', [EditProfileController::class, 'update']);
 Route::post('/change_password', [PasswordController::class, 'updatePassword']);
 
 // Route to Post
-Route::post('/post', [PostController::class, 'post']);
+Route::post('/post', [PostController::class, 'post'])->name('user.post');
 
 // Route to Update Post
 Route::get('/post/{id?}', [PostController::class, 'post_index']);
@@ -121,6 +121,7 @@ Route::delete('/delete_reply/{id}', [ReplyController::class, 'destroy'])->name('
 ///////// ////////USER ROUTE /////////////////////
 ////////// GET ROUTE ///////////////
 Route::middleware(['MyMiddleWare'])->group(function () {
+    Route::get('/main/{id?}', [MainController::class, 'main_index'])->name('default');
     Route::get('/profile', [ProfileController::class, 'index']);
     Route::prefix('profile')->group(function () {
         Route::get('show', [ProfileController::class, 'show']);
@@ -154,5 +155,5 @@ Route::get('/reset_password/{id}', [PasswordController::class, 'reset_index'])->
 Route::post('/reset_password/{id?}', [PasswordController::class, 'reset_password'])->name('user.reset.password');
 
 Route::get('/{id?}', function () {
-    return redirect(route('default'));
+    return redirect(route('login'));
 })->where('id', '.*');
