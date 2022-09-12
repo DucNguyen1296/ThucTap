@@ -70,7 +70,7 @@ class PostController extends Controller
                 'image_path' => $path
             ]);
         }
-        
+
         // dd($request->all());
         return response()->json($p);
         // return redirect()->route('user.profile', ['name' => $user->name]);

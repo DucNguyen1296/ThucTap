@@ -32,10 +32,12 @@ class CommentController extends Controller
 
     public function comment_delete($id)
     {
-        $comment = Comment::where('id', $id)->first();
         // Storage::delete('public/comment_image/' . $comment->image_name);
-        Comment::where('id', $id)->firstOrFail()->delete();
-        return redirect()->route('default');
+        $comment = Comment::where('id', $id);
+        $comment->firstOrFail()->delete();
+        // dd($comment);
+        return response()->json([]);
+        // return redirect()->route('default');
     }
 
     public function comment_update(Request $request, $id)
