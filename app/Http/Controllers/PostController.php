@@ -26,7 +26,7 @@ class PostController extends Controller
         $post = $request->input('post');
         $link = $request->input('link');
 
-        $p = Post::create([
+        Post::create([
             'user_id' => $user->id,
             'title' => $title,
             'post' => $post,
@@ -61,8 +61,8 @@ class PostController extends Controller
             $validated = $request->validate([
                 'image' => 'required|mimes:jpg,png,jpeg',
             ]);
-
-            $name = $request->file('image')->hashName();
+            $name = $request->file('image')->getClientOriginalName();
+            // $name = $request->file('image')->hashName();
             $path = $request->file('image')->storeAs('public/post_image', $name);
 
             Post::where('title', $title)->update([
@@ -71,8 +71,10 @@ class PostController extends Controller
             ]);
         }
 
+        $p = $request->all();
+
         // dd($request->all());
-        return response()->json($p);
+        return response()->json(['postAjax' => $p]);
         // return redirect()->route('user.profile', ['name' => $user->name]);
     }
 
@@ -88,6 +90,7 @@ class PostController extends Controller
             $validated = $request->validate([
                 'update_img' => 'required|mimes:jpg,png,jpeg'
             ]);
+
 
             $name = $request->file('update_img')->hashName();
             $path = $request->file('update_img')->storeAs('public/post_image', $name);

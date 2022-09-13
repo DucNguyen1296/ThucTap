@@ -111,6 +111,7 @@
                                         value="" id="post__link">
 
                                 </div>
+
                                 <div>
                                     <img id="image_preview" height="50px" width="50px" />
                                 </div>
@@ -119,6 +120,7 @@
                                     <input class="btn__post--post" id="image" type="file" name="image"
                                         onchange="loadFile(event)" />
                                 </div>
+
                                 <div class="btn btn__post">
                                     <input class="btn__post--post" type="submit" value="Post" />
                                 </div>
@@ -169,10 +171,18 @@
 
                                 <div class="post__feed--content">
                                     <form action="{{ route('user.post.comment', ['id' => $post->id]) }}"
-                                        method="POST">
+                                        method="POST" id="post__comment--button">
                                         @csrf
-                                        <textarea name="comment" id="" class="post__feed--content--box" style="resize:none"
+                                        <textarea name="comment" id="post__comment" class="post__feed--content--box" style="resize:none"
                                             placeholder="Viết bình luận" col="1" required></textarea>
+                                        <div>
+                                            <img id="image_preview_2" height="50px" width="50px" />
+                                        </div>
+                                        <div class="btn btn__post">
+                                            <label for="image">Add image to your Post</label>
+                                            <input class="btn__post--post" type="file" name="image"
+                                                onchange="loadFile(event)" />
+                                        </div>
                                         <input type="submit" value="Comment">
                                     </form>
                                 </div>
@@ -189,7 +199,7 @@
                                             @foreach ($post->comments as $comment)
                                                 @if ($us->id == $comment->user_id)
                                                     <li>
-                                                        <div class="post__feed--main">
+                                                        <div class="post__feed--main cmt_id{{ $comment->id }}">
                                                             <div class="post__feed--item--avatar">
                                                                 <img src="{{ asset('/storage/avatar/' . $us->avatars->avatar_name) }}"
                                                                     alt="avatar">
@@ -202,7 +212,8 @@
                                                                             <div>
                                                                                 {{ $us->name }}
                                                                             </div>
-                                                                            <div>
+                                                                            <div
+                                                                                id="comment--info{{ $comment->id }}">
                                                                                 {{ $comment->comment }}
                                                                             </div>
                                                                         </div>
@@ -223,7 +234,8 @@
                                                                                             @method('DELETE')
                                                                                             <div>
                                                                                                 <button type="submit"
-                                                                                                    id="comment__button--delete">
+                                                                                                    id="comment__button--delete"
+                                                                                                    data-id="{{ $comment->id }}">
                                                                                                     Delete
                                                                                                 </button>
                                                                                             </div>
@@ -247,19 +259,23 @@
                                                                                             <div class="modal__box">
                                                                                                 <form
                                                                                                     action="{{ route('user.comment.update', ['id' => $comment->id]) }}"
-                                                                                                    method="POST">
+                                                                                                    method="POST"
+                                                                                                    id="comment__button--update">
                                                                                                     @csrf
                                                                                                     <input
                                                                                                         type="text"
                                                                                                         name="update_comment"
                                                                                                         class="form__input"
+                                                                                                        data-id="{{ $comment->id }}"
+                                                                                                        id="comment__content--update"
                                                                                                         placeholder="Content"
                                                                                                         value="{{ $comment->comment }}"
                                                                                                         required />
                                                                                                     <input
                                                                                                         class="modal__button--update"
                                                                                                         type="submit"
-                                                                                                        value="Lưu">
+                                                                                                        value="Lưu"
+                                                                                                        data-id="{{ $comment->id }}" />
                                                                                                 </form>
                                                                                             </div>
                                                                                         </div>
@@ -281,7 +297,8 @@
                                                                                             @method('DELETE')
                                                                                             <div>
                                                                                                 <button type="submit"
-                                                                                                    id="comment__button--delete">
+                                                                                                    id="comment__button--delete"
+                                                                                                    data-id="{{ $comment->id }}">
                                                                                                     Delete
                                                                                                 </button>
 
@@ -387,10 +404,13 @@
     </footer>
 </body>
 <script type="text/javascript" src="{{ asset('js/script.js') }}"></script>
+
 <script>
     let loadFile = function(event) {
         let image_preview = document.getElementById('image_preview');
+        let image_preview2 = document.getElementById('image_preview_2');
         image_preview.src = URL.createObjectURL(event.target.files[0]);
+        image_preview2.src = URL.createObjectURL(event.target.files[0]);
         // console.log(image_preview);
     };
 </script>
@@ -435,24 +455,59 @@
     //     });
     // });
 
+    // $(document).on('click', '#comment__button--delete', function(e) {
+    //     e.preventDefault();
+
+
+    //     let comment_id = e.target.getAttribute("data-id");
+    //     console.log(comment_id);
+    //     confirm("Are You sure want to delete !");
+
+    //     $.ajax({
+    //         url: "{{ route('user.comment.delete', ['id' => $comment->id]) }}",
+    //         type: "DELETE",
+    //         success: function(response) {
+    //             if (response) {
+    //                 $('.cmt_id' + comment_id).remove();
+    //                 console.log('success');
+    //             }
+    //         }
+    //     });
+    // });
+
     $(document).on('click', '#comment__button--delete', function(e) {
         e.preventDefault();
-
-
-        let comment_id = $(this).data('id');
+        let comment_id = e.target.getAttribute("data-id");
         console.log(comment_id);
-        alert("Are You sure want to delete !");
+        confirm("Are You sure want to delete !");
+        axios.delete(
+            "/delete_comment/" + comment_id
+            // "{{ route('user.comment.delete', ['id' => $comment->id]) }}"
+        ).then(function(response) {
+            $('.cmt_id' + comment_id).remove();
+        }).catch(function(error) {
+            console.log(error);
+        });
+    });
 
-        $.ajax({
-
-            url: "{{ route('user.comment.delete', ['id' => $comment->id]) }}" + '/' + comment_id,
-            type: "DELETE",
-            success: function(response) {
-                if (response) {
-                    $('.post__feed--comment--info').remove();
-                    alert('success');
-                }
+    // $(document).on('click', '#comment__button--update', function(e) {
+    $('#comment__button--update').submit(function(e) {
+        e.preventDefault();
+        let comment = $('#comment__content--update').val();
+        let comment_id = e.target.getAttribute("data-id");
+        console.log(comment);
+        axios({
+            method: "POST",
+            url: "/update_comment/" + comment_id,
+            data: {
+                comment: comment
             }
+        }).then(function(response) {
+            console.log(response);
+            alert('success');
+            $('#comment--info' + comment_id).innerText = response.data.comment;
+        }).catch(function(error) {
+            console.log(error);
         });
     });
 </script>
@@ -463,16 +518,20 @@
 
         let title = $('#post__title').val();
         let post = $('#post__text').val();
-
+        console.log(title);
+        console.log(post);
         let axiosAPI = axios({
             method: "POST",
             url: "{{ route('user.post') }}",
             data: {
                 title: title,
-                post: post
+                post: post,
+
             }
         }).then(function(response) {
-            console.log(response.data);
+
+            console.log(response);
+
             $('#post__feed').prepend(
                 '<div class="post__feed--item"><a href="{{ route('user.profile.detail', ['id' => Auth::user()->id]) }}"><div class="post__feed--item--head"><div class="post__feed--item--avatar"><img src="{{ asset('/storage/avatar/' . Auth::user()->avatars->avatar_name) }}" alt="avatar"></div><div class="post__feed--item--info">{{ Auth::user()->name }}</div></div></a> <div><a href="{{ route('default') }}">' +
                 response.data.title + '</a></div><div class="post__feed--item--title">' + response
@@ -490,6 +549,24 @@
             console.log(error);
         });
         // console.log(axiosAPI);
+    });
+
+    $('#post__comment--button').submit(function(e) {
+        e.preventDefault();
+        let comment = $('#post__comment').val();
+        console.log(comment);
+        axios({
+            method: "POST",
+            url: "{{ route('user.post.comment', ['id' => $post->id]) }}",
+            data: {
+                comment: comment
+            }
+        }).then(function(response) {
+            $('ul')
+            console.log(response);
+        }).catch(function(error) {
+            console.log(error);
+        });
     });
 </script>
 

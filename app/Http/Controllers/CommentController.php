@@ -23,7 +23,8 @@ class CommentController extends Controller
                 'post_id' => $post->id,
                 'comment' => $comment
             ]);
-            return redirect(route('default'));
+            // return redirect(route('default'));
+            return response()->json([]);
         } else {
             Session::flash('comment_session', 'Xin vui lòng đăng nhập trước khi bình luận');
             return redirect()->back();
@@ -33,6 +34,7 @@ class CommentController extends Controller
     public function comment_delete($id)
     {
         // Storage::delete('public/comment_image/' . $comment->image_name);
+        // dd($id);
         $comment = Comment::where('id', $id);
         $comment->firstOrFail()->delete();
         // dd($comment);
@@ -44,15 +46,16 @@ class CommentController extends Controller
     {
         $update_comment = $request->input('update_comment');
 
-        $user = Auth::user();
+
         $comment = Comment::where('id', $id)->first();
         // dd($comment);
-        $post = Post::where('id', $comment->post_id)->first();
-        Comment::where('id', $id)->update(
+
+        $cmt = Comment::where('id', $id)->update(
             [
                 'comment' => $update_comment
             ]
         );
-        return redirect()->route('default');
+        return response()->json($update_comment);
+        // return redirect()->route('default');
     }
 }
