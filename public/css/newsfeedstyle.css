@@ -1,0 +1,31 @@
+*,
+::after,
+::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 62.5%;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.card__main {
+    margin-bottom: 2rem;
+    margin-left: 22.5rem;
+    margin-right: 22.5rem;
+    display: block;
+    width: 30rem;
+}
+
+.card-body__link img {
+    width: 100%;
+}

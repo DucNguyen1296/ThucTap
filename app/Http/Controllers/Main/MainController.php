@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
+use App\Models\Friend;
 use App\Models\Post;
 use App\Models\Reply;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class MainController extends Controller
@@ -35,8 +37,37 @@ class MainController extends Controller
 
     public function main_user_detail($id)
     {
-        $user = User::where('id', $id)->first();
-        // dd($user);
-        return view('main.user_detail', ['user' => $user]);
+        $user = User::find($id);
+
+        $userlog = Auth::user();
+
+        $users = User::all();
+
+        $friends = Friend::all();
+
+
+        $friendFrom = $user->friendsFrom()->get();
+        $friendTo = $user->friendsTo()->get();
+
+        $friend = Friend::where([
+            [
+                'user_id', '=', Auth::user()->id
+            ],
+            [
+                'friend_id', '=', $id
+            ]
+        ])->orWhere([
+            [
+                'user_id', '=', $id
+            ],
+            [
+                'friend_id', '=', Auth::user()->id
+            ]
+        ])->first();
+
+        // $friend = Friend::where('user_id', '=', Auth::user()->id)->where('friend_id', '=', $id)->first();
+        // $friend = $user->friends;
+        // dd($friend);
+        return view('main.user_detail', ['user' => $user, 'userlog' => $userlog, 'users' => $users, 'friend' => $friend]);
     }
 }

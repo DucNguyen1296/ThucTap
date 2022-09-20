@@ -18,12 +18,14 @@ use App\Http\Controllers\Admin\AdminLoginController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FriendController;
 use App\Http\Controllers\Main\MainController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\UploadFileController;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\MyMiddleWare;
 use App\Mail\NewMail;
+use App\Models\Friend;
 use Illuminate\Support\Facades\Mail;
 
 /*
@@ -112,7 +114,7 @@ Route::post('/update_file/{id}', [UploadFileController::class, 'update_img'])->n
 // Route to Comment
 Route::post('/comment/{id}', [CommentController::class, 'comment'])->name('user.post.comment');
 Route::delete('/delete_comment/{id}', [CommentController::class, 'comment_delete'])->name('user.comment.delete');
-Route::post('/update_comment/{id}', [CommentController::class, 'comment_update'])->name('user.comment.update');
+Route::put('/update_comment/{id}', [CommentController::class, 'comment_update'])->name('user.comment.update');
 
 // Route to Reply
 Route::post('/reply_comment/{id?}', [ReplyController::class, 'store'])->name('user.reply.create');
@@ -143,6 +145,23 @@ Route::get('/main_post/{id}', [MainController::class, 'main_post_detail'])->name
 
 // Route to show the user
 Route::get('/user/{id}', [MainController::class, 'main_user_detail'])->name('user.profile.detail');
+
+
+/////// Friend
+Route::post('/add_friend/{id}', [FriendController::class, 'store'])->name('user.friend.store');
+Route::delete('/delete_friend/{id}', [FriendController::class, 'destroy'])->name('user.friend.delete');
+Route::get('/show_friend/{id?}', [FriendController::class, 'show'])->name('user.friend.show');
+
+// Friend request
+Route::post('/accept/{id?}', [FriendController::class, 'accept'])->name('user.friend.accept');
+Route::delete('/decline/{id?}', [FriendController::class, 'decline'])->name('user.friend.decline');
+Route::delete('/cancel/{id?}', [FriendController::class, 'cancel'])->name('user.friend.cancel');
+
+//// Timeline
+Route::get('/timeline/{id?}', [FriendController::class, 'index'])->name('user.friend.timeline');
+
+/// NewsFeed
+Route::get('/newsfeed/{id?}', [FriendController::class, 'newsfeed'])->name('user.newsfeed');
 
 /////// Mail
 

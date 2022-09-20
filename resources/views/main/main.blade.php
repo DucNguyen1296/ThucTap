@@ -24,6 +24,7 @@
                         <a href="/main">
                             <img src="{{ asset('/storage/logo/fakebook.png') }}" alt="logo" class="logo" />
                         </a>
+                        
                     </div>
 
                     <!-- link -->
@@ -91,15 +92,15 @@
                             </div>
                         </div>
                         <div class="post__content--box modal hidden" id="post__content--box">
-                            <div>
+                            <div class="post__content--box--header">
                                 Tạo bài viết mới
+                                <button class="close__modal">
+                                    &times;
+                                </button>
                             </div>
-                            <button class="close__modal">
-                                &times;
-                            </button>
-                            <form action="/post" method="POST" enctype="multipart/form-data" id="post__button">
+                            <form action="/post" method="POST" enctype="multipart/form-data" id="post__main">
                                 @csrf
-                                <div>
+                                <div class="post__content--box--title">
                                     <input type="text" name="title" placeholder="Tiêu đề" id="post__title">
                                 </div>
                                 <div class="post__box">
@@ -117,12 +118,12 @@
                                 </div>
                                 <div class="btn btn__post">
                                     <label for="image">Add image to your Post</label>
-                                    <input class="btn__post--post" id="image" type="file" name="image"
+                                    <input class="btn__post--img" id="post__image" type="file" name="image"
                                         onchange="loadFile(event)" />
                                 </div>
 
                                 <div class="btn btn__post">
-                                    <input class="btn__post--post" type="submit" value="Post" />
+                                    <input class="btn__post--post" type="submit" value="Post" id="post__button" />
                                 </div>
                             </form>
                         </div>
@@ -171,9 +172,9 @@
 
                                 <div class="post__feed--content">
                                     <form action="{{ route('user.post.comment', ['id' => $post->id]) }}"
-                                        method="POST" id="post__comment--button">
+                                        method="POST">
                                         @csrf
-                                        <textarea name="comment" id="post__comment" class="post__feed--content--box" style="resize:none"
+                                        <textarea name="comment" id="post__comment{{ $post->id }}" class="post__feed--content--box" style="resize:none"
                                             placeholder="Viết bình luận" col="1" required></textarea>
                                         <div>
                                             <img id="image_preview_2" height="50px" width="50px" />
@@ -183,7 +184,8 @@
                                             <input class="btn__post--post" type="file" name="image"
                                                 onchange="loadFile(event)" />
                                         </div>
-                                        <input type="submit" value="Comment">
+                                        <input type="submit" value="Comment" id="post__comment--button"
+                                            data-id="{{ $post->id }}">
                                     </form>
                                 </div>
 
@@ -193,8 +195,8 @@
                                     </div>
                                 </div>
 
-                                <div class="post__feed--comment">
-                                    <ul>
+                                <div class="post__feed--comment{{ $post->id }}">
+                                    <ul id="comment{{ $post->id }}">
                                         @foreach ($users as $us)
                                             @foreach ($post->comments as $comment)
                                                 @if ($us->id == $comment->user_id)
@@ -260,14 +262,15 @@
                                                                                                 <form
                                                                                                     action="{{ route('user.comment.update', ['id' => $comment->id]) }}"
                                                                                                     method="POST"
-                                                                                                    id="comment__button--update">
+                                                                                                    id="comment__update">
+                                                                                                    @method('PUT')
                                                                                                     @csrf
                                                                                                     <input
                                                                                                         type="text"
                                                                                                         name="update_comment"
                                                                                                         class="form__input"
                                                                                                         data-id="{{ $comment->id }}"
-                                                                                                        id="comment__content--update"
+                                                                                                        id="comment__content--update{{ $comment->id }}"
                                                                                                         placeholder="Content"
                                                                                                         value="{{ $comment->comment }}"
                                                                                                         required />
@@ -275,7 +278,8 @@
                                                                                                         class="modal__button--update"
                                                                                                         type="submit"
                                                                                                         value="Lưu"
-                                                                                                        data-id="{{ $comment->id }}" />
+                                                                                                        data-id="{{ $comment->id }}"
+                                                                                                        id="comment__button--update" />
                                                                                                 </form>
                                                                                             </div>
                                                                                         </div>
@@ -490,22 +494,22 @@
         });
     });
 
-    // $(document).on('click', '#comment__button--update', function(e) {
-    $('#comment__button--update').submit(function(e) {
+    $(document).on('click', '#comment__button--update', function(e) {
         e.preventDefault();
-        let comment = $('#comment__content--update').val();
         let comment_id = e.target.getAttribute("data-id");
+        console.log(comment_id);
+        let comment = $('#comment__content--update' + comment_id).val();
         console.log(comment);
-        axios({
-            method: "POST",
-            url: "/update_comment/" + comment_id,
-            data: {
-                comment: comment
-            }
-        }).then(function(response) {
-            console.log(response);
+
+        let form = document.getElementById('comment__update');
+        let formData = new FormData(form);
+
+        console.log([...formData]);
+        // formData.append('update_comment', comment);
+        axios.put('/update_comment/' + comment_id, formData).then(function(response) {
+            console.log(response.data);
+            $('#comment--info' + response.data.id).textContent = 'aaaaaa';
             alert('success');
-            $('#comment--info' + comment_id).innerText = response.data.comment;
         }).catch(function(error) {
             console.log(error);
         });
@@ -513,31 +517,51 @@
 </script>
 
 <script>
-    $('#post__button').submit(function(e) {
+    $(document).on('click', '#post__button', function(e) {
         e.preventDefault();
 
-        let title = $('#post__title').val();
-        let post = $('#post__text').val();
-        console.log(title);
-        console.log(post);
-        let axiosAPI = axios({
-            method: "POST",
-            url: "{{ route('user.post') }}",
-            data: {
-                title: title,
-                post: post,
+        // let title = $('#post__title').val();
+        // let post = $('#post__text').val();
+        // let form = new FormData();
+        // let img = document.querySelector('#post__image');
+        // form.append('image', img.files[0]);
+        let form = document.getElementById('post__main');
 
-            }
-        }).then(function(response) {
 
-            console.log(response);
+        let formData = new FormData(form);
+
+        // formData.append('title', document.getElementById('post__title').value);
+        // formData.append('post', document.getElementById('post__text').value);
+        console.log([...formData]);
+
+
+        // console.log(title);
+        // console.log(post);
+        // console.log(form);
+
+        // function loadImg() {
+        //     return axios.post('/post', form, {
+        //         headers: {
+        //             'Content-Type': 'multipart/form-data'
+        //         }
+        //     });
+        // };
+
+        axios.post('/post', formData).then(function(response) {
+            console.log(response.data);
 
             $('#post__feed').prepend(
-                '<div class="post__feed--item"><a href="{{ route('user.profile.detail', ['id' => Auth::user()->id]) }}"><div class="post__feed--item--head"><div class="post__feed--item--avatar"><img src="{{ asset('/storage/avatar/' . Auth::user()->avatars->avatar_name) }}" alt="avatar"></div><div class="post__feed--item--info">{{ Auth::user()->name }}</div></div></a> <div><a href="{{ route('default') }}">' +
-                response.data.title + '</a></div><div class="post__feed--item--title">' + response
+                '<div class="post__feed--item"><a href="{{ route('user.profile.detail', ['id' => Auth::user()->id]) }}"><div class="post__feed--item--head"><div class="post__feed--item--avatar"><img src="{{ asset('/storage/avatar/' . Auth::user()->avatars->avatar_name) }}" alt="avatar"></div><div class="post__feed--item--info">{{ Auth::user()->name }}</div></div></a> <div><a href="/user/' +
+                response.data.id + '">' +
+                response.data.title + '</a></div><div class="post__feed--item--title">' +
+                response
                 .data.post +
-                '</div></div>');
-            $("#post__button")[0].reset();
+                '</div><div class="post__feed--item--link"><div><img src="/storage/post_image/' +
+                response.data.image_name + '" alt="Image"></div></div></div>'
+            );
+
+            document.getElementById("post__main").reset();
+            document.getElementById("image_preview").src = " ";
             $(".post__content--box").hide();
             $(".overlay").hide();
 
@@ -551,19 +575,42 @@
         // console.log(axiosAPI);
     });
 
-    $('#post__comment--button').submit(function(e) {
+    $(document).on('click', '#post__comment--button', function(e) {
+        // $('#post__comment--button').submit(function(e) {
         e.preventDefault();
-        let comment = $('#post__comment').val();
+        let post_id = e.target.getAttribute('data-id');
+        console.log(post_id);
+        let comment = $('#post__comment' + post_id).val();
         console.log(comment);
         axios({
             method: "POST",
-            url: "{{ route('user.post.comment', ['id' => $post->id]) }}",
+            url: "/comment/" + post_id,
             data: {
                 comment: comment
             }
         }).then(function(response) {
-            $('ul')
-            console.log(response);
+            console.log(response.data);
+            $('#comment' + post_id).prepend(
+                '<li><div class="post__feed--main cmt_id' + response.data
+                .id +
+                '"><div class="post__feed--item--avatar"><img src="{{ asset('/storage/avatar/' . Auth::user()->avatars->avatar_name) }}"alt="avatar"></div><div class="post__feed--main--box"><div class="post__feed--main--box2"><div class="post__feed--main--box3"><div class="post__feed--comment--info"><div>{{ Auth::user()->name }}</div><div id="comment--info' +
+                response.data.id + '">' +
+                response.data.comment +
+                '</div></div><div class="toggle"></div><div class="post__feed--comment--button hidden"><div class="post__feed--comment--delete"><form action="/delete_comment/' +
+                response.data.id +
+                '" method="POST" id="comment__delete"> @csrf @method('DELETE')<div><button type="submit" id="comment__button--delete" data-id="' +
+                response.data.id +
+                '">Delete</button></div></form></div><div class="post__feed--comment--update"><button class="show__modal">Update</button><div class="modal hidden"><div class="modal__head"><button class="close__modal">&times;</button><h2>Chỉnh sửa bình luận</h2></div><div class="modal__box"><form action="/update_comment/' +
+                response.data.id +
+                '" method="POST" >@csrf<input type="text" name="update_comment" class="form__input" data-id="' +
+                response.data.id + '" id="comment__content--update" placeholder="Content" value="' +
+                response.data.comment +
+                '" required /><input class="modal__button--update" type="submit" value="Lưu" data-id="' +
+                response.data.id +
+                '" id="comment__button--update"/></form></div></div><div class="overlay hidden"></div></div></div></div><div class="post__feed--reply"><form action="/reply_comment/' +
+                response.data.id +
+                '" method="POST">@csrf<textarea type="text" name="reply" placeholder="Viết phản hồi" class="post__feed--content--box" style="resize:none" col="1" required></textarea><button type="submit">Reply</button></form></div></div></div></li>'
+            );
         }).catch(function(error) {
             console.log(error);
         });
@@ -588,3 +635,23 @@
 @endif
 
 </html>
+
+
+{{-- function uploadImage(id = 0) {
+    const form = new FormData();
+    form.append('file', $('#upload-image')[0].files[0]);
+    form.append('id_file', id);
+    $.ajax({
+        processData: false,
+        contentType: false,
+        type: "POST",
+        dataType: "JSON",
+        data: form,
+        url: "/admin/upload/image",
+        success: function(result) {
+            $(".image-display").html("<img src='" + result.url +
+                "' alt='Ảnh bìa' width='100px' height='100px'>");
+            $("#image_name").val(result.url);
+        }
+    });
+} --}}

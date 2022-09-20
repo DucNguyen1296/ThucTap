@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     use HasFactory;
+    protected $table = 'posts';
     protected $fillable = [
         'user_id',
         'title',
@@ -31,5 +32,10 @@ class Post extends Model
     public function replies()
     {
         return $this->hasMany(Reply::class);
+    }
+
+    public function friends()
+    {
+        return $this->belongsToMany(Friend::class);
     }
 }

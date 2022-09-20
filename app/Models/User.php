@@ -37,6 +37,21 @@ class User extends Authenticatable
         return $this->hasMany(Reply::class);
     }
 
+    // public function friends()
+    // {
+    //     return $this->hasMany(Friend::class);
+    // }
+
+    public function friendsTo()
+    {
+        return $this->hasMany(Friend::class, 'user_id');
+    }
+
+    public function friendsFrom()
+    {
+        return $this->hasMany(Friend::class, 'friend_id');
+    }
+
 
     public $timestamps = false;
     /**
@@ -44,6 +59,9 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    protected $table = 'users';
+
     protected $fillable = [
         'name',
         'email',

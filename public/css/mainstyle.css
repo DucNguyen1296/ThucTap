@@ -48,6 +48,11 @@ a {
 }
 
 /* MAIN LOGIN */
+.main__login {
+    display: flex;
+    flex-direction: row;
+}
+
 .main__login--user {
     font-size: 1rem;
 }
@@ -112,6 +117,42 @@ a {
     text-align: left;
     padding-left: 10px;
     cursor: pointer;
+}
+
+.post__content--box {
+    font-size: 1rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+.post__content--box--header {
+    text-align: center;
+    font-weight: bold;
+    border-bottom: solid #000;
+    padding-bottom: 1rem;
+}
+
+.post__content--box--title {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+.post__content--box--title input {
+    height: 5vh;
+    width: 100%;
+}
+
+.post__box--content {
+    height: 25vh;
+    width: 100%;
 }
 
 .post__feed {
@@ -319,4 +360,12 @@ a {
     background-repeat: no-repeat;
     background-position: center;
     cursor: pointer;
+}
+
+/* BUTTON */
+.btn__post--post {
+    margin-top: 1rem;
+    width: 100%;
+    height: 2rem;
+    border-radius: 10px;
 }

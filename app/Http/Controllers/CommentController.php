@@ -18,14 +18,15 @@ class CommentController extends Controller
             $user = Auth::user();
             $post = Post::where('id', $id)->first();
             $comment = $request->input('comment');
-            Comment::create([
+            $cmt = Comment::create([
                 'user_id' => $user->id,
                 'post_id' => $post->id,
                 'comment' => $comment
             ]);
             // return redirect(route('default'));
-            return response()->json([]);
+            return response()->json($cmt);
         } else {
+            
             Session::flash('comment_session', 'Xin vui lòng đăng nhập trước khi bình luận');
             return redirect()->back();
         }
@@ -45,17 +46,18 @@ class CommentController extends Controller
     public function comment_update(Request $request, $id)
     {
         $update_comment = $request->input('update_comment');
+        $user = Auth::user();
 
-
-        $comment = Comment::where('id', $id)->first();
-        // dd($comment);
-
-        $cmt = Comment::where('id', $id)->update(
+        Comment::where('id', $id)->update(
             [
                 'comment' => $update_comment
             ]
         );
-        return response()->json($update_comment);
+
+        $cmt = $user->comments->find($id);
+        // $cmt = $request->all();
+        // dd($cmt);
+        return response()->json($cmt);
         // return redirect()->route('default');
     }
 }
