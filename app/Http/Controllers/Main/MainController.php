@@ -12,11 +12,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
+use function PHPUnit\Framework\isEmpty;
+
 class MainController extends Controller
 {
     //
     public function main_index()
     {
+
         $users = User::all();
         $posts = Post::all();
         $comments = Comment::all();
@@ -40,14 +43,8 @@ class MainController extends Controller
         $user = User::find($id);
 
         $userlog = Auth::user();
-
+        // dd(($userlog->friendsFrom));
         $users = User::all();
-
-        $friends = Friend::all();
-
-
-        $friendFrom = $user->friendsFrom()->get();
-        $friendTo = $user->friendsTo()->get();
 
         $friend = Friend::where([
             [
@@ -65,9 +62,16 @@ class MainController extends Controller
             ]
         ])->first();
 
-        // $friend = Friend::where('user_id', '=', Auth::user()->id)->where('friend_id', '=', $id)->first();
-        // $friend = $user->friends;
         // dd($friend);
-        return view('main.user_detail', ['user' => $user, 'userlog' => $userlog, 'users' => $users, 'friend' => $friend]);
+
+        // if ($friend == null) {
+        //     $friend = new Friend();
+        //     $friend->user_id = $id;
+        //     $friend->friend_id = $id;
+        //     $friend->approved = 1;
+        //     $friend->save();
+        // }
+
+        return view('main.user_detail', ['user' => $user, 'users' => $users, 'friend' => $friend]);
     }
 }

@@ -36,8 +36,14 @@ a {
     padding: 1rem;
 }
 
+.nav__search {
+    margin-left: 0.5rem;
+    height: 100%;
+    width: 60%;
+}
+
 .logo {
-    height: 2rem;
+    height: 2.5rem;
 }
 
 .link li {
@@ -70,7 +76,7 @@ a {
 
 /* POST */
 
-.container {
+.containers {
     display: flex;
     flex-direction: column;
     padding: 2rem;

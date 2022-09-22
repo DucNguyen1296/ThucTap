@@ -24,7 +24,7 @@
                         <a href="/main">
                             <img src="{{ asset('/storage/logo/fakebook.png') }}" alt="logo" class="logo" />
                         </a>
-                        
+
                     </div>
 
                     <!-- link -->
@@ -45,7 +45,7 @@
                     <div class="main__login">
                         @if (Auth::check())
                             <div class="main__login--user">
-                                <a href="/profile">
+                                <a href="{{ route('user.profile.detail', ['id' => Auth::user()->id]) }}">
                                     <img src="{{ asset('/storage/avatar/' . Auth::user()->avatars->avatar_name) }}"
                                         alt="">
                                 </a>
@@ -77,7 +77,7 @@
 
             </div>
 
-            <div class="container">
+            <div class="containers">
                 @if (Auth::check())
                     <div class="post__content">
                         <div class="post__header">

@@ -163,6 +163,9 @@ Route::get('/timeline/{id?}', [FriendController::class, 'index'])->name('user.fr
 /// NewsFeed
 Route::get('/newsfeed/{id?}', [FriendController::class, 'newsfeed'])->name('user.newsfeed');
 
+/// Search
+Route::get('/search', [FriendController::class, 'search'])->name('user.friend.search');
+
 /////// Mail
 
 //Route to forgot password

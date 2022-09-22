@@ -38,8 +38,17 @@ class LoginController extends Controller
             if (Gate::allows('isAdmin')) {
                 return redirect(route('admin'));
             } elseif (Gate::allows('isUser')) {
+                $users = User::all();
+                // $user = User::where('id', $id)->first();
+                $user = Auth::user();
+                // dd($user);
+                $posts = Post::all();
+
+                $friends = $user->friendsFrom;
+
                 Session::flash('correct', 'Đăng nhập thành công');
                 return redirect()->route('user.profile', ['name' => Auth::user()->name]);
+                // return view('main.user_newsfeed', ['users' => $users, 'posts' => $posts, 'friends' => $friends, 'user' => $user]);
             }
         } else {
             return back()->with('incorrect', 'Email hoặc mật khẩu chưa chính xác. Xin vui lòng thử lại');

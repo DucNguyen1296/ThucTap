@@ -23,6 +23,23 @@
                         <a href="/main">
                             <img src="{{ asset('/storage/logo/fakebook.png') }}" alt="logo" class="logo" />
                         </a>
+
+                        <nav class="navbar nav__search navbar-light bg-light ">
+                            <div class="container-fluid">
+                                {{-- <form action="/search" class="d-flex" method="GET"> --}}
+
+                                <input class="form-control me-2" type="text" placeholder="Search User"
+                                    aria-label="Search" id="search" name="search">
+                                {{-- <button class="btn btn-outline-success" id='btn_search'
+                                        type="submit">Search</button> --}}
+                                {{-- </form> --}}
+
+                                <div id="search__result">
+
+                                </div>
+
+                            </div>
+                        </nav>
                     </div>
 
                     <!-- link -->
@@ -47,35 +64,37 @@
                                 Notification
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                @foreach (Auth::user()->friendsFrom->where('approved', '=', 0) as $friendFrom)
-                                    <li>
-                                        <img src="{{ asset('/storage/avatar/' . $friendFrom->users->avatars->avatar_name) }}"
-                                            alt="Profile Picture" width="50" height="50">
-                                        <div style="display: inline-block">
-                                            {{ $friendFrom->users->name }}
-                                            <div data-userid="{{ $friendFrom->users->id }}">
-                                                <form
-                                                    action="{{ route('user.friend.accept', ['id' => $friendFrom->users->id]) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    <button class="btn btn-success btn-sm request" type="submit">
-                                                        Accept
-                                                    </button>
-                                                </form>
-                                                <form
-                                                    action="{{ route('user.friend.decline', ['id' => $friendFrom->users->id]) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="btn btn-danger btn-sm request" type="submit">
-                                                        Decline
-                                                    </button>
-                                                </form>
+                                @if (Auth::user()->friendsFrom->where('approved', '=', 0)->where('friend_id', $user->id)->count() > 0)
+                                    @foreach (Auth::user()->friendsFrom->where('approved', '=', 0)->where('friend_id', Auth::user()->id) as $friendFrom)
+                                        <li>
+                                            <img src="{{ asset('/storage/avatar/' . $friendFrom->users->avatars->avatar_name) }}"
+                                                alt="Profile Picture" width="50" height="50">
+                                            <div style="display: inline-block">
+                                                {{ $friendFrom->users->name }}
+                                                <div data-userid="{{ $friendFrom->users->id }}">
+                                                    <form
+                                                        action="{{ route('user.friend.accept', ['id' => $friendFrom->users->id]) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        <button class="btn btn-success btn-sm request" type="submit">
+                                                            Accept
+                                                        </button>
+                                                    </form>
+                                                    <form
+                                                        action="{{ route('user.friend.decline', ['id' => $friendFrom->users->id]) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="btn btn-danger btn-sm request" type="submit">
+                                                            Decline
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </li>
-                                @endforeach
-                                @if (Auth::user()->friendsFrom->where('approved', '=', 0)->count() == 0)
+                                        </li>
+                                    @endforeach
+                                @else
+                                    {{-- (Auth::user()->friendsFrom->where('approved', '=', 0)->where('friend_id', Auth::user()->id)->count() == 0) --}}
                                     You Don't have any Friend Request
                                 @endif
 
@@ -535,5 +554,53 @@
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
+</script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    // const axios = require('axios');
+    let search = document.getElementById('search');
+    search.addEventListener('keyup', function() {
+        let data = this.value;
+        // let html = '<ul><li>' + data + '</li></ul>';
+        // document.getElementById('search__result').innerHTML = html;
+        // console.log(data);
+        // $(document).on('click', '#btn_search', function(e) {
+        // document.getElementById('btn_search').addEventListener('click', function(e) {
+        // e.preventDefault();
+
+        axios({
+            method: "GET",
+            url: '/search',
+            datas: data
+        }).then(function(response) {
+            console.log(response);
+            // document.getElementById('search__result').innerText = '<ul><li>' + response.data.name +
+            //     '</li></ul>';
+            // $('#search__result').html(html);
+        }).catch(function(error) {
+            console.log(error);
+        });
+
+
+        // axios.get('/search', data).then(function(response) {
+        //     console.log(response);
+        //     // document.getElementById('search__result').innerText = '<ul><li>' + response.data.name +
+        //     //     '</li></ul>';
+        //     // $('#search__result').html(html);
+        // }).catch(function(error) {
+        //     console.log(error);
+        // });
+
+        // alert(results);
+    });
+</script>
 
 </html>

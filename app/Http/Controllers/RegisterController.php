@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Friend;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -52,6 +53,13 @@ class RegisterController extends Controller
             // dd($id);
             app('App\Http\Controllers\AvatarController')->avatar($id);
             // session()->flash('regiscorrect', 'Đăng ký thành công');
+
+            Friend::create([
+                'user_id' => $id,
+                'friend_id' => $id,
+                'approved' => 1
+            ]);
+
             Session::flash('regiscorrect', 'Đăng ký thành công');
             return redirect(route('login'));
         } else {
