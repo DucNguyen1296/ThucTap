@@ -51,13 +51,6 @@ class FriendController extends Controller
 
         $friends = $user->friendsFrom;
 
-        // if ($user->friendsFrom->isEmpty()) {
-        //     $friend = new Friend();
-        //     $friend->user_id = $id;
-        //     $friend->friend_id = Auth::user()->id;
-        //     $friend->approved = 1;
-        //     $friend->save();
-        // }
         // foreach ($posts as $post) {
         //     foreach ($post->friends as $fr) {
         //         Log::channel('custom')->info(($fr));
@@ -90,22 +83,28 @@ class FriendController extends Controller
     public function search(Request $request)
     {
         //
-        $search = $request->search;
-        $data = User::where('name', 'like', '%' . $search . '%')->get();
-        $output = '';
-        if (count($data) > 0) {
-            foreach ($data as $dt) {
-                $output .= '<ul><li>' . $dt->name .
-                    '</li></ul>';
+        if ($request->ajax()) {
+            $search = $request->search;
+            $data = User::where('name', 'like', '%' . $search . '%')->get();
+            // dd($data);
+            $output = '';
+            if (count($data) > 0) {
+                foreach ($data as $dt) {
+                    // $output .= '<li><a href="/user/' . $dt->id . '">' . $dt->name . '</a></li>';
+                    $output .= '<li class="row__item"><div class="d-flex flex-row bd-highlight "><div class="row__item--image"><img src="/storage/avatar/' . $dt->avatars->avatar_name . '"></div><div class="row__item--user">
+                    <a href="/user/' . $dt->id . '">' . $dt->name . '</a>
+                        </div>
+                    </div>
+                </li>';
+                }
+            } else {
+                $output .= 'No result';
             }
-        } else {
-            $output .= 'No result';
         }
-
         // dd($data);
         // return back()->with('data', $data);
-        // return response()->json($data);
-        return $output;
+        return response()->json($output);
+        // return $output;
     }
 
 
@@ -140,7 +139,6 @@ class FriendController extends Controller
         // foreach ($post_1 as $p1) {
         //     $p1->friends()->attach(['friend_id' => $user_1->id], ['post_id' => $p1->id]);
         // }
-
         $user_1->save();
 
         $user_2 = Friend::all()->where('friend_id', '=', $id)->where('user_id', '=', Auth::user()->id)->first();

@@ -91,7 +91,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="post__content--box modal hidden" id="post__content--box">
+                        <div class="post__content--box modal2 hidden" id="post__content--box">
                             <div class="post__content--box--header">
                                 Tạo bài viết mới
                                 <button class="close__modal">
@@ -248,7 +248,7 @@
                                                                                         <button class="show__modal">
                                                                                             Update
                                                                                         </button>
-                                                                                        <div class="modal hidden">
+                                                                                        <div class="modal2 hidden">
                                                                                             <div class="modal__head">
                                                                                                 <button
                                                                                                     class="close__modal">
@@ -262,7 +262,7 @@
                                                                                                 <form
                                                                                                     action="{{ route('user.comment.update', ['id' => $comment->id]) }}"
                                                                                                     method="POST"
-                                                                                                    id="comment__update">
+                                                                                                    id="comment__update{{ $comment->id }}">
                                                                                                     @method('PUT')
                                                                                                     @csrf
                                                                                                     <input
@@ -501,14 +501,23 @@
         let comment = $('#comment__content--update' + comment_id).val();
         console.log(comment);
 
-        let form = document.getElementById('comment__update');
-        let formData = new FormData(form);
+        let formUpdate = document.getElementById("comment__update" + comment_id);
+        console.log(formUpdate);
+        let formDataUpdate = new FormData(formUpdate);
 
-        console.log([...formData]);
+        console.log([...formDataUpdate]);
+        // console.log([...formData][2]);
         // formData.append('update_comment', comment);
-        axios.put('/update_comment/' + comment_id, formData).then(function(response) {
+        axios({
+            method: "PUT",
+            url: '/update_comment/' + comment_id,
+            comment: formDataUpdate
+
+            // axios.put('/update_comment/' + comment_id, {
+            //     comment: comment
+        }).then(function(response) {
             console.log(response.data);
-            $('#comment--info' + response.data.id).textContent = 'aaaaaa';
+            $('#comment--info' + response.data.id).innerHTML = response.data.comment;
             alert('success');
         }).catch(function(error) {
             console.log(error);
@@ -600,7 +609,7 @@
                 response.data.id +
                 '" method="POST" id="comment__delete"> @csrf @method('DELETE')<div><button type="submit" id="comment__button--delete" data-id="' +
                 response.data.id +
-                '">Delete</button></div></form></div><div class="post__feed--comment--update"><button class="show__modal">Update</button><div class="modal hidden"><div class="modal__head"><button class="close__modal">&times;</button><h2>Chỉnh sửa bình luận</h2></div><div class="modal__box"><form action="/update_comment/' +
+                '">Delete</button></div></form></div><div class="post__feed--comment--update"><button class="show__modal">Update</button><div class="modal2 hidden"><div class="modal__head"><button class="close__modal">&times;</button><h2>Chỉnh sửa bình luận</h2></div><div class="modal__box"><form action="/update_comment/' +
                 response.data.id +
                 '" method="POST" >@csrf<input type="text" name="update_comment" class="form__input" data-id="' +
                 response.data.id + '" id="comment__content--update" placeholder="Content" value="' +

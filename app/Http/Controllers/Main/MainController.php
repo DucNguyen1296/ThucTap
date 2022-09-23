@@ -46,6 +46,9 @@ class MainController extends Controller
         // dd(($userlog->friendsFrom));
         $users = User::all();
 
+        $a = $userlog->friendsFrom->where('approved', '=', 0)->where('friend_id', Auth::user()->id);
+        // dd($a);
+
         $friend = Friend::where([
             [
                 'user_id', '=', Auth::user()->id

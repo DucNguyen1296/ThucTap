@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" type="image/png" href="{{ asset('/storage/logo/facebook.png') }}">
     <link rel="stylesheet" type="text/css" href="{{ url('/css/mainstyle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url('/css/newsfeedstyle.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
@@ -34,8 +35,10 @@
                                         type="submit">Search</button> --}}
                                 {{-- </form> --}}
 
-                                <div id="search__result">
+                                <div class="form__group">
+                                    <ul class="search__result">
 
+                                    </ul>
                                 </div>
 
                             </div>
@@ -64,7 +67,8 @@
                                 Notification
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                @if (Auth::user()->friendsFrom->where('approved', '=', 0)->where('friend_id', $user->id)->count() > 0)
+                                @if (Auth::user()->friendsFrom->where('approved', '=', 0)->where('friend_id', Auth::user()->id)->isNotEmpty() &&
+                                    Auth::user()->friendsTo->where('approved', '=', 0)->where('friend_id', Auth::user()->id)->isNotEmpty())
                                     @foreach (Auth::user()->friendsFrom->where('approved', '=', 0)->where('friend_id', Auth::user()->id) as $friendFrom)
                                         <li>
                                             <img src="{{ asset('/storage/avatar/' . $friendFrom->users->avatars->avatar_name) }}"
@@ -255,6 +259,60 @@
         <div class="d-flex bd-highlight">
             <div class="p-2 flex-grow-1 bd-highlight ">
                 <div class="d-flex flex-column align-items-center bd-highlight mb-3 ">
+                    @if (Auth::user()->id == $user->id)
+                        <div class="post__content">
+                            <div class="post__header">
+                                <div>
+                                    <img src="{{ asset('/storage/avatar/' . Auth::user()->avatars->avatar_name) }}"
+                                        alt="">
+                                </div>
+                                <div class="post__header--button">
+                                    <button class="show__modal">
+                                        {{ Auth::user()->name }} ơi, bạn đang nghĩ gì thế?
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="post__content--box modal2 hidden" id="post__content--box">
+                                <div class="post__content--box--header">
+                                    Tạo bài viết mới
+                                    <button class="close__modal">
+                                        &times;
+                                    </button>
+                                </div>
+                                <form action="/post" method="POST" enctype="multipart/form-data" id="post__main">
+                                    @csrf
+                                    <div class="post__content--box--title">
+                                        <input type="text" name="title" placeholder="Tiêu đề" id="post__title">
+                                    </div>
+                                    <div class="post__box">
+                                        <textarea name="post" class="post__box--content" style="resize:none" cols="30" rows="5"
+                                            placeholder="Bạn đang nghĩ gì?" id="post__text"></textarea>
+                                    </div>
+                                    <div class="post__url">
+                                        <input class="post__url--preview" type="url" name="link"
+                                            placeholder="Link" value="" id="post__link">
+
+                                    </div>
+
+                                    <div>
+                                        <img id="image_preview" height="50px" width="50px" />
+                                    </div>
+                                    <div class="btn btn__post">
+                                        <label for="image">Add image to your Post</label>
+                                        <input class="btn__post--img" id="post__image" type="file" name="image"
+                                            onchange="loadFile(event)" />
+                                    </div>
+
+                                    <div class="btn btn__post">
+                                        <input class="btn__post--post" type="submit" value="Post"
+                                            id="post__button" />
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="overlay hidden">
+                            </div>
+                        </div>
+                    @endif
                     <div class="p-2 bd-highlight post__header">
                         Bài Viết
                     </div>
@@ -381,7 +439,7 @@
                                                                                                         Update
                                                                                                     </button>
                                                                                                     <div
-                                                                                                        class="modal hidden">
+                                                                                                        class="modal2 hidden">
                                                                                                         <div
                                                                                                             class="modal__head">
                                                                                                             <button
@@ -550,6 +608,9 @@
         </div>
     @endif
 </body>
+
+<script type="text/javascript" src="{{ asset('js/script.js') }}"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
 </script>
@@ -564,43 +625,211 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-<script>
-    // const axios = require('axios');
-    let search = document.getElementById('search');
-    search.addEventListener('keyup', function() {
-        let data = this.value;
-        // let html = '<ul><li>' + data + '</li></ul>';
-        // document.getElementById('search__result').innerHTML = html;
-        // console.log(data);
-        // $(document).on('click', '#btn_search', function(e) {
-        // document.getElementById('btn_search').addEventListener('click', function(e) {
-        // e.preventDefault();
 
-        axios({
-            method: "GET",
-            url: '/search',
-            datas: data
-        }).then(function(response) {
-            console.log(response);
-            // document.getElementById('search__result').innerText = '<ul><li>' + response.data.name +
-            //     '</li></ul>';
-            // $('#search__result').html(html);
+<script>
+    let loadFile = function(event) {
+        let image_preview = document.getElementById('image_preview');
+        let image_preview2 = document.getElementById('image_preview_2');
+        image_preview.src = URL.createObjectURL(event.target.files[0]);
+        image_preview2.src = URL.createObjectURL(event.target.files[0]);
+        // console.log(image_preview);
+    };
+</script>
+
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $(document).on('click', '#comment__button--delete', function(e) {
+        e.preventDefault();
+        let comment_id = e.target.getAttribute("data-id");
+        console.log(comment_id);
+        confirm("Are You sure want to delete !");
+        axios.delete(
+            "/delete_comment/" + comment_id
+
+        ).then(function(response) {
+            $('.cmt_id' + comment_id).remove();
         }).catch(function(error) {
             console.log(error);
         });
-
-
-        // axios.get('/search', data).then(function(response) {
-        //     console.log(response);
-        //     // document.getElementById('search__result').innerText = '<ul><li>' + response.data.name +
-        //     //     '</li></ul>';
-        //     // $('#search__result').html(html);
-        // }).catch(function(error) {
-        //     console.log(error);
-        // });
-
-        // alert(results);
     });
+
+    $(document).on('click', '#comment__button--update', function(e) {
+        e.preventDefault();
+        let comment_id = e.target.getAttribute("data-id");
+        console.log(comment_id);
+        let comment = $('#comment__content--update' + comment_id).val();
+        console.log(comment);
+
+        let form = document.getElementById('comment__update');
+        let formData = new FormData(form);
+
+        console.log([...formData]);
+        // formData.append('update_comment', comment);
+        axios.put('/update_comment/' + comment_id, formData).then(function(response) {
+            console.log(response.data);
+            $('#comment--info' + response.data.id).textContent = 'aaaaaa';
+            alert('success');
+        }).catch(function(error) {
+            console.log(error);
+        });
+    });
+</script>
+
+<script>
+    $(document).on('click', '#post__button', function(e) {
+        e.preventDefault();
+
+        let form = document.getElementById('post__main');
+
+        let formData = new FormData(form);
+
+        console.log([...formData]);
+
+        axios.post('/post', formData).then(function(response) {
+            console.log(response.data);
+
+            $('#post__feed').prepend(
+                '<div class="post__feed--item"><a href="{{ route('user.profile.detail', ['id' => Auth::user()->id]) }}"><div class="post__feed--item--head"><div class="post__feed--item--avatar"><img src="{{ asset('/storage/avatar/' . Auth::user()->avatars->avatar_name) }}" alt="avatar"></div><div class="post__feed--item--info">{{ Auth::user()->name }}</div></div></a> <div><a href="/user/' +
+                response.data.id + '">' +
+                response.data.title + '</a></div><div class="post__feed--item--title">' +
+                response
+                .data.post +
+                '</div><div class="post__feed--item--link"><div><img src="/storage/post_image/' +
+                response.data.image_name + '" alt="Image"></div></div></div>'
+            );
+
+            document.getElementById("post__main").reset();
+            document.getElementById("image_preview").src = " ";
+            $(".post__content--box").hide();
+            $(".overlay").hide();
+
+            $('.show__modal').click(function() {
+                $(".post__content--box").show();
+                $(".overlay").show();
+            });
+        }).catch(function(error) {
+            console.log(error);
+        });
+        // console.log(axiosAPI);
+    });
+
+    $(document).on('click', '#post__comment--button', function(e) {
+        // $('#post__comment--button').submit(function(e) {
+        e.preventDefault();
+        let post_id = e.target.getAttribute('data-id');
+        console.log(post_id);
+        let comment = $('#post__comment' + post_id).val();
+        console.log(comment);
+        axios({
+            method: "POST",
+            url: "/comment/" + post_id,
+            data: {
+                comment: comment
+            }
+        }).then(function(response) {
+            console.log(response.data);
+            $('#comment' + post_id).prepend(
+                '<li><div class="post__feed--main cmt_id' + response.data
+                .id +
+                '"><div class="post__feed--item--avatar"><img src="{{ asset('/storage/avatar/' . Auth::user()->avatars->avatar_name) }}"alt="avatar"></div><div class="post__feed--main--box"><div class="post__feed--main--box2"><div class="post__feed--main--box3"><div class="post__feed--comment--info"><div>{{ Auth::user()->name }}</div><div id="comment--info' +
+                response.data.id + '">' +
+                response.data.comment +
+                '</div></div><div class="toggle"></div><div class="post__feed--comment--button hidden"><div class="post__feed--comment--delete"><form action="/delete_comment/' +
+                response.data.id +
+                '" method="POST" id="comment__delete"> @csrf @method('DELETE')<div><button type="submit" id="comment__button--delete" data-id="' +
+                response.data.id +
+                '">Delete</button></div></form></div><div class="post__feed--comment--update"><button class="show__modal">Update</button><div class="modal2 hidden"><div class="modal__head"><button class="close__modal">&times;</button><h2>Chỉnh sửa bình luận</h2></div><div class="modal__box"><form action="/update_comment/' +
+                response.data.id +
+                '" method="POST" >@csrf<input type="text" name="update_comment" class="form__input" data-id="' +
+                response.data.id + '" id="comment__content--update" placeholder="Content" value="' +
+                response.data.comment +
+                '" required /><input class="modal__button--update" type="submit" value="Lưu" data-id="' +
+                response.data.id +
+                '" id="comment__button--update"/></form></div></div><div class="overlay hidden"></div></div></div></div><div class="post__feed--reply"><form action="/reply_comment/' +
+                response.data.id +
+                '" method="POST">@csrf<textarea type="text" name="reply" placeholder="Viết phản hồi" class="post__feed--content--box" style="resize:none" col="1" required></textarea><button type="submit">Reply</button></form></div></div></div></li>'
+            );
+        }).catch(function(error) {
+            console.log(error);
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    // const axios = require('axios');
+    // let search = document.getElementById('search');
+    // search.addEventListener('keyup', function() {
+    //     let data = this.value;
+    //     // let html = '<ul><li>' + data + '</li></ul>';
+    //     // document.getElementById('search__result').innerHTML = html;
+    //     // console.log(data);
+    //     // $(document).on('click', '#btn_search', function(e) {
+    //     // document.getElementById('btn_search').addEventListener('click', function(e) {
+    //     // e.preventDefault();
+
+    //     axios({
+    //         method: "GET",
+    //         url: '/search',
+    //         headers: {
+    //             "X-Requested-With": "XMLHttpRequest",
+    //         },
+    //         data: data
+    //     }).then(function(response) {
+    //         console.log(response);
+    //         document.getElementById('search__result').innerHTML = response.data.name;
+    //         // $('.search__result').html(html);
+    //     }).catch(function(error) {
+    //         console.log(error);
+    //     });
+
+
+    $('#search').on('keyup', function() {
+        $('.search__result').hide();
+        $value = $(this).val();
+
+        if ($value != '') {
+            $.ajax({
+                type: 'get',
+                url: '/search',
+                data: {
+                    'search': $value
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('.search__result').show();
+                    $('.search__result').html(data);
+                }
+            });
+        } else {
+            $('.search__result').html('');
+            $('.search__result').hide();
+        }
+
+
+    })
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // axios.get('/search', data).then(function(response) {
+    //     console.log(response);
+    //     // document.getElementById('search__result').innerText = '<ul><li>' + response.data.name +
+    //     //     '</li></ul>';
+    //     // $('.search__result').html(html);
+    // }).catch(function(error) {
+    //     console.log(error);
+    // });
+
+    // alert(results);
+    // });
 </script>
 
 </html>

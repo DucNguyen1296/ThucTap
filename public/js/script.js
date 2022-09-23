@@ -1,7 +1,7 @@
 "use strict";
 
 // Modal update button
-const modal = document.querySelectorAll(".modal");
+const modal = document.querySelectorAll(".modal2");
 const overlay = document.querySelectorAll(".overlay");
 const btnsCloseModal = document.querySelectorAll(".close__modal");
 const btnsOpenModal = document.querySelectorAll(".show__modal");

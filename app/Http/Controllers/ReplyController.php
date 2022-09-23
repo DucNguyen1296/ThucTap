@@ -41,23 +41,23 @@ class ReplyController extends Controller
     public function store(Request $request, $id)
     {
         //
-        if (Auth::check()) {
-            $user = Auth::user();
-            $comment = Comment::where('id', $id)->first();
-            $post = Post::where('id', $comment->post_id)->first();
-            // dd($comment->post_id);
-            $reply = $request->input('reply');
-            Reply::create([
-                'user_id' => $user->id,
-                'post_id' => $post->id,
-                'comment_id' => $comment->id,
-                'reply' => $reply
-            ]);
-            return redirect(route('default'));
-        } else {
-            Session::flash('comment_session', 'Xin vui lòng đăng nhập trước khi bình luận');
-            return redirect()->back();
-        }
+        // if (Auth::check()) {
+        $user = Auth::user();
+        $comment = Comment::where('id', $id)->first();
+        $post = Post::where('id', $comment->post_id)->first();
+        // dd($comment->post_id);
+        $reply = $request->input('reply');
+        Reply::create([
+            'user_id' => $user->id,
+            'post_id' => $post->id,
+            'comment_id' => $comment->id,
+            'reply' => $reply
+        ]);
+        return redirect(route('default'));
+        // } else {
+        //     Session::flash('comment_session', 'Xin vui lòng đăng nhập trước khi bình luận');
+        //     return redirect()->back();
+        // }
     }
 
     /**

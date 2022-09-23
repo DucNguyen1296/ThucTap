@@ -14,22 +14,22 @@ class CommentController extends Controller
     //
     public function comment(Request $request, $id)
     {
-        if (Auth::check()) {
-            $user = Auth::user();
-            $post = Post::where('id', $id)->first();
-            $comment = $request->input('comment');
-            $cmt = Comment::create([
-                'user_id' => $user->id,
-                'post_id' => $post->id,
-                'comment' => $comment
-            ]);
-            // return redirect(route('default'));
-            return response()->json($cmt);
-        } else {
-            
-            Session::flash('comment_session', 'Xin vui lòng đăng nhập trước khi bình luận');
-            return redirect()->back();
-        }
+        // if (Auth::check()) {
+        $user = Auth::user();
+        $post = Post::where('id', $id)->first();
+        $comment = $request->input('comment');
+        $cmt = Comment::create([
+            'user_id' => $user->id,
+            'post_id' => $post->id,
+            'comment' => $comment
+        ]);
+        // return redirect(route('default'));
+        return response()->json($cmt);
+        // } else {
+
+        //     Session::flash('comment_session', 'Xin vui lòng đăng nhập trước khi bình luận');
+        //     return redirect()->back();
+        // }
     }
 
     public function comment_delete($id)
@@ -48,16 +48,22 @@ class CommentController extends Controller
         $update_comment = $request->input('update_comment');
         $user = Auth::user();
 
-        Comment::where('id', $id)->update(
-            [
-                'comment' => $update_comment
-            ]
-        );
+        // Comment::where('id', $id)->update(
+        //     [
+        //         'comment' => $update_comment
+        //     ]
+        // );
 
-        $cmt = $user->comments->find($id);
+        $comment = Comment::find($id);
+        $comment->comment = $update_comment;
+        $comment->save();
+
+        // $comment = $user->comments->find($id);
+        // dd($comment);
         // $cmt = $request->all();
         // dd($cmt);
-        return response()->json($cmt);
+        return response()->json($comment);
         // return redirect()->route('default');
+        // return back();
     }
 }

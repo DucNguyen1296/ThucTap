@@ -19,11 +19,55 @@ a {
 }
 
 .card__main {
-    margin-bottom: 2rem;
+    margin-top: 2rem;
     display: block;
     width: 30rem;
 }
 
+.navbar-brand img {
+    width: 80px;
+    height: 80px;
+    clip-path: circle(50% at 50% 50%);
+}
+
 .card-body__link img {
     width: 100%;
+}
+
+.container-fluid div {
+    position: relative;
+}
+
+.search__result {
+    position: absolute;
+    background-color: #fff;
+    z-index: 10;
+    width: 100%;
+}
+
+.row__item {
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.row__item:hover {
+    background-color: rgba(85, 180, 235, 0.777);
+}
+
+.row__item--image img {
+    width: 40px;
+    height: 40px;
+    clip-path: circle(50% at 50% 50%);
+}
+
+.form__group {
+    width: 100%;
+}
+
+.row__item--user {
+    margin-left: 1rem;
+}
+
+.row__item--user a {
+    text-decoration: none;
 }
