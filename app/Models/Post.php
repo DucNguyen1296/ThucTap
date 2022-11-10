@@ -34,6 +34,13 @@ class Post extends Model
         return $this->hasMany(Reply::class);
     }
 
+    public function likes()
+    {
+        return $this->hasMany(LikePost::class);
+    }
+
+    
+
     public function friends()
     {
         return $this->belongsToMany(Friend::class);

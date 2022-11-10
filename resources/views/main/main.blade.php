@@ -53,7 +53,7 @@
                             </div>
                         @else
                             <div class="main__login--button">
-                                <a href="/login">
+                                <a href="/">
                                     <div class="button">
                                         <button>Đăng nhập</button>
                                     </div>
@@ -74,7 +74,7 @@
     <main>
         <div class="post">
             <div class="post__advertise">
-
+                <h1>Advertisement</h1>
             </div>
 
             <div class="containers">
@@ -190,8 +190,10 @@
                                 </div>
 
                                 <div class="post__feed--footer">
-                                    <div>
-                                        Bình luận
+                                    <div class="d-flex justify-content-evenly">
+                                        <div class="p-2 bd-highlight">Thích</div>
+                                        <div class="p-2 bd-highlight">Bình luận</div>
+                                        <div class="p-2 bd-highlight">Chia sẻ</div>
                                     </div>
                                 </div>
 
@@ -398,7 +400,7 @@
                 </div>
             </div>
             <div class="post__advertise">
-
+                <h1>Advertisement</h1>
             </div>
         </div>
     </main>
@@ -498,6 +500,7 @@
         e.preventDefault();
         let comment_id = e.target.getAttribute("data-id");
         console.log(comment_id);
+
         let comment = $('#comment__content--update' + comment_id).val();
         console.log(comment);
 
@@ -506,18 +509,15 @@
         let formDataUpdate = new FormData(formUpdate);
 
         console.log([...formDataUpdate]);
-        // console.log([...formData][2]);
-        // formData.append('update_comment', comment);
-        axios({
-            method: "PUT",
-            url: '/update_comment/' + comment_id,
-            comment: formDataUpdate
 
-            // axios.put('/update_comment/' + comment_id, {
-            //     comment: comment
-        }).then(function(response) {
+        // axios({
+        //     method: "PUT",
+        //     url: '/update_comment/' + comment_id,
+        //     data: formDataUpdate
+
+        axios.put('/update_comment/' + comment_id, comment).then(function(response) {
             console.log(response.data);
-            $('#comment--info' + response.data.id).innerHTML = response.data.comment;
+            document.getElementById('comment--info' + comment_id).innerHTML = 'aaaa';
             alert('success');
         }).catch(function(error) {
             console.log(error);

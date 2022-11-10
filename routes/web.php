@@ -19,13 +19,16 @@ use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FriendController;
+use App\Http\Controllers\LikePostController;
 use App\Http\Controllers\Main\MainController;
+use App\Http\Controllers\MessengerController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\UploadFileController;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\MyMiddleWare;
 use App\Mail\NewMail;
 use App\Models\Friend;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 /*
@@ -43,17 +46,40 @@ Route::get('/', function () {
     return view('login');
 });
 
+// if (1) {
+//     dd(Auth::user()->email);
+//     Route::get('/', function () {
+//         dd('aaaa');
+//         return view('login');
+//     });
+// } else {
+//     dd(123);
+//     Route::get('/', function () {
+//         return redirect()->route('user.newsfeed');
+//     });
+// }
+
+Route::middleware(['guest'])->group(function () {
+    Route::get('/', function () {
+        return view('login');
+    });
+
+    Route::get('/login', function () {
+        return view('login');
+    })->name('login');
 
 
-Route::get('/login', function () {
-    return view('login');
-})->name('login');
+    // Route register
+    Route::get('/register', function () {
+        return view('register');
+    })->name('register');
 
-// Route register
-Route::get('/register', function () {
-    return view('register');
-})->name('register');
+    // Route register
+    Route::post('/register', [RegisterController::class, 'register']);
 
+    // Route Access Login
+    Route::post('/trangchu', [LoginController::class, 'login'])->name('user.login');
+});
 
 ////////////////// ADMIN ROUTE ////////////////////
 /////////// POST ROUTE ////////////////
@@ -79,11 +105,11 @@ Route::post('/user_edit/{id}', [AdminToolController::class, 'user_edit'])->name(
 
 /////////////////////USER ROUTE ////////////////////////
 /////////// POST ROUTE ////////////////
-// Route Access
-Route::post('/submit', [LoginController::class, 'login']);
+// Route Access Login
+// Route::post('/trangchu', [LoginController::class, 'login'])->name('user.login');
 
 // Route register
-Route::post('/register', [RegisterController::class, 'register']);
+// Route::post('/register', [RegisterController::class, 'register']);
 
 // Route Update-Edit profile
 Route::post('/edit_profile', [EditProfileController::class, 'update']);
@@ -112,23 +138,35 @@ Route::post('/update_file/{id}', [UploadFileController::class, 'update_img'])->n
 // Route::delete('/delete_file/{id}', [UploadFileController::class, 'delete_img'])->name('user.file.delete');
 
 // Route to Comment
-Route::post('/comment/{id}', [CommentController::class, 'comment'])->name('user.post.comment');
-Route::delete('/delete_comment/{id}', [CommentController::class, 'comment_delete'])->name('user.comment.delete');
-Route::put('/update_comment/{id}', [CommentController::class, 'comment_update'])->name('user.comment.update');
+Route::middleware(['UserStatusMiddleWare'])->group(function () {
+    Route::post('/comment/{id}', [CommentController::class, 'comment'])->name('user.post.comment');
+    Route::delete('/delete_comment/{id}', [CommentController::class, 'comment_delete'])->name('user.comment.delete');
+    Route::put('/update_comment/{id}', [CommentController::class, 'comment_update'])->name('user.comment.update');
 
-// Route to Reply
-Route::post('/reply_comment/{id?}', [ReplyController::class, 'store'])->name('user.reply.create');
-Route::delete('/delete_reply/{id}', [ReplyController::class, 'destroy'])->name('user.reply.delete');
+    // Route to Reply
+    Route::post('/reply_comment/{id?}', [ReplyController::class, 'store'])->name('user.reply.create');
+    Route::delete('/delete_reply/{id}', [ReplyController::class, 'destroy'])->name('user.reply.delete');
+
+    // Route to Like
+    Route::post('/like_post/{id?}', [LikePostController::class, 'like'])->name('user.like.post');
+    Route::delete('/delete_like_post/{id?}', [LikePostController::class, 'destroy'])->name('user.delete.like.post');
+
+    Route::post('/click', [MainController::class, 'click']);
+    Route::post('/scroll', [MainController::class, 'scroll']);
+});
 
 ///////// ////////USER ROUTE /////////////////////
 ////////// GET ROUTE ///////////////
 Route::middleware(['MyMiddleWare'])->group(function () {
     Route::get('/main/{id?}', [MainController::class, 'main_index'])->name('default');
     Route::get('/profile', [ProfileController::class, 'index']);
+    Route::get('/newsfeed/{id?}', [FriendController::class, 'newsfeed'])->name('user.newsfeed');
     Route::prefix('profile')->group(function () {
         Route::get('show', [ProfileController::class, 'show']);
         Route::get('{name}', [ProfileController::class, 'index'])->name('user.profile');
     });
+    // Route to show the user
+    Route::get('/user/{id}', [MainController::class, 'main_user_detail'])->name('user.profile.detail');
 });
 
 // Route Edit
@@ -144,7 +182,7 @@ Route::get('/logout', [LogOutController::class, 'logout']);
 Route::get('/main_post/{id}', [MainController::class, 'main_post_detail'])->name('main.post.detail');
 
 // Route to show the user
-Route::get('/user/{id}', [MainController::class, 'main_user_detail'])->name('user.profile.detail');
+// Route::get('/user/{id}', [MainController::class, 'main_user_detail'])->name('user.profile.detail');
 
 
 /////// Friend
@@ -161,7 +199,11 @@ Route::delete('/cancel/{id?}', [FriendController::class, 'cancel'])->name('user.
 Route::get('/timeline/{id?}', [FriendController::class, 'index'])->name('user.friend.timeline');
 
 /// NewsFeed
-Route::get('/newsfeed/{id?}', [FriendController::class, 'newsfeed'])->name('user.newsfeed');
+// Route::get('/newsfeed/{id?}', [FriendController::class, 'newsfeed'])->name('user.newsfeed');
+
+// Chat
+Route::get('/chat/{id?}', [MessengerController::class, 'index']);
+Route::post('/send-messenger/{id}', [MessengerController::class, 'store']);
 
 /// Search
 Route::get('/search', [FriendController::class, 'search'])->name('user.friend.search');

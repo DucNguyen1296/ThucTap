@@ -44,6 +44,6 @@ class AvatarController extends Controller
             'avatar_path' => $path
         ]);
 
-        return redirect()->route('user.profile', ['name' => $user->name]);
+        return redirect()->back();
     }
 }

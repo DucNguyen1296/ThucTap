@@ -31,13 +31,28 @@ class RegisterController extends Controller
             'term' => 'required'
         ]);
 
+        //// CREATE A MILLION users
+        // set_time_limit(2000000000000000);
+        // for ($i = 100; $i < 1000000; $i++) {
 
-        // $datas = User::all();
-        // foreach ($datas as $data) {
-        //     if ($email == $data->email) {
-        //         Session::flash('')
-        //     }
+        //     $user = new User();
+        //     $user->id = $i;
+        //     $user->email = $email . strval($i);
+        //     $user->name = $name . strval($i);
+        //     $user->password = 123;
+        //     $user->date = $date;
+        //     $user->location = $location;
+        //     $user->title = $title;
+        //     $user->save();
+
+        //     $friend = new Friend();
+        //     $friend->user_id = $user->id;
+        //     $friend->friend_id = $user->id;
+        //     $friend->approved = 1;
+        //     $friend->save();
         // }
+
+
 
         if ($password == $repassword) {
             User::create([

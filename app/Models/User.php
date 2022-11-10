@@ -37,6 +37,16 @@ class User extends Authenticatable
         return $this->hasMany(Reply::class);
     }
 
+    public function likes_post()
+    {
+        return $this->hasMany(LikePost::class);
+    }
+
+    public function messengers()
+    {
+        return $this->hasMany(Messenger::class);
+    }
+
     // public function friends()
     // {
     //     return $this->hasMany(Friend::class);
@@ -52,8 +62,22 @@ class User extends Authenticatable
         return $this->hasMany(Friend::class, 'friend_id');
     }
 
+    public function friendsPost()
+    {
+        return $this->hasManyThrough(Post::class, Friend::class, 'friend_id', 'user_id', 'id', 'user_id');
+    }
+
+    // public function friends()
+    // {
+    //     return $this->friendsFrom->merge($this->friendsTo);
+    // }
 
     public $timestamps = false;
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'last_active'
+    ];
     /**
      * The attributes that are mass assignable.
      *
@@ -69,7 +93,9 @@ class User extends Authenticatable
         'date',
         'location',
         'title',
-        'role'
+        'role',
+        'last_active',
+        'status'
     ];
 
     /**

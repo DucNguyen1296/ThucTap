@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,9 +23,15 @@ class MyMiddleWare
         if (Auth::check() && Gate::allows('isAdmin')) {
             return $next($request);
         } elseif (Auth::check() && Gate::allows('isUser')) {
+            // dd(Auth::user());
+            $user = User::find(Auth::user()->id);
+            $user->update([
+                'last_active' => Carbon::now('Asia/Ho_Chi_Minh'),
+                'status' => 1
+            ]);
             return $next($request);
         } else {
-            return back();
+            return redirect('/');
         }
     }
 }

@@ -19,6 +19,7 @@
             <form action="/forgot_password" method="POST">
                 @csrf
                 <div class="container">
+                    <p>Vui lòng nhập tên đăng nhập của bạn</p>
                     <div class="form__group">
                         <input type="text" name="user_name" class="form__input" placeholder="Your Name" required />
                     </div>

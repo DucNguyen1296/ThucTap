@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Reply;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -51,9 +52,10 @@ class ReplyController extends Controller
             'user_id' => $user->id,
             'post_id' => $post->id,
             'comment_id' => $comment->id,
-            'reply' => $reply
+            'reply' => $reply,
+            'created_at' => Carbon::now('Asia/Ho_Chi_Minh')
         ]);
-        return redirect(route('default'));
+        return redirect()->back();
         // } else {
         //     Session::flash('comment_session', 'Xin vui lòng đăng nhập trước khi bình luận');
         //     return redirect()->back();
@@ -103,8 +105,7 @@ class ReplyController extends Controller
     public function destroy($id)
     {
         //
-        // Storage::delete('public/comment_image/' . $comment->image_name);
         Reply::where('id', $id)->firstOrFail()->delete();
-        return redirect()->route('default');
+        return response()->json([]);
     }
 }

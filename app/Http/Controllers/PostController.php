@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use App\Models\User;
+use Carbon\Carbon;
 use DOMDocument;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -45,7 +46,8 @@ class PostController extends Controller
                 'post' => $post,
                 'link' => $link,
                 'image_name' => $name,
-                'image_path' => $path
+                'image_path' => $path,
+                'created_at' => Carbon::now('Asia/Ho_Chi_Minh')
             ]);
         } else {
             $p = Post::create([
@@ -106,13 +108,15 @@ class PostController extends Controller
                 [
                     'post' => $update_post,
                     'image_name' => $name,
-                    'image_path' => $path
+                    'image_path' => $path,
+                    'updated_at' => Carbon::now('Asia/Ho_Chi_Minh')
                 ]
             );
         } else {
             Post::where('id', $id)->update(
                 [
-                    'post' => $update_post
+                    'post' => $update_post,
+                    'updated_at' => Carbon::now('Asia/Ho_Chi_Minh')
                 ]
             );
         }

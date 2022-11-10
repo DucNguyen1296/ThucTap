@@ -31,24 +31,38 @@ class LoginController extends Controller
             ],
             $remember
         )) {
+            // if ($request->get('remember')) {
+            //     Auth::setRememberDuration(1); // equivalent to 1 minutes
+            // }
             $request->session()->regenerate();
+            // $user = $request->all();
 
-            // dd(User::all()); 
+
+
 
             if (Gate::allows('isAdmin')) {
                 return redirect(route('admin'));
             } elseif (Gate::allows('isUser')) {
-                $users = User::all();
+                // $users = User::all();
                 // $user = User::where('id', $id)->first();
                 $user = Auth::user();
                 // dd($user);
-                $posts = Post::all();
+                // $posts = Post::all();
+                $likesPost = Auth::user()->likes_post;
 
-                $friends = $user->friendsFrom;
+                $friendsTo = $user->friendsTo;
+                $friendsFrom = $user->friendsFrom;
+                // dd($friendsFrom);
+                $friends = $friendsTo->merge($friendsFrom);
 
-                Session::flash('correct', 'Đăng nhập thành công');
-                return redirect()->route('user.profile', ['name' => Auth::user()->name]);
-                // return view('main.user_newsfeed', ['users' => $users, 'posts' => $posts, 'friends' => $friends, 'user' => $user]);
+                $users = User::with('friendsTo')->get();
+
+                $postDatas = Post::with('user', 'friends')->get();
+                // Session::flash('correct', 'Đăng nhập thành công');
+                // return redirect()->route('user.profile', ['name' => Auth::user()->name]);
+                // return view('main.user_newsfeed', ['users' => $users, 'postDatas' => $postDatas, 'friendsTo' => $friendsTo, 'friendsFrom' => $friendsFrom, 'friends' => $friends, 'user' => $user, 'likesPost' => $likesPost]);
+                // return view('main.user_newsfeed', ['users' => $users, 'postDatas' => $postDatas, 'friends' => $friends, 'user' => $user, 'likesPost' => $likesPost]);
+                return redirect(route('user.newsfeed', ['users' => $users, 'postDatas' => $postDatas, 'friendsTo' => $friendsTo, 'friendsFrom' => $friendsFrom, 'friends' => $friends, 'user' => $user, 'likesPost' => $likesPost]));
             }
         } else {
             return back()->with('incorrect', 'Email hoặc mật khẩu chưa chính xác. Xin vui lòng thử lại');

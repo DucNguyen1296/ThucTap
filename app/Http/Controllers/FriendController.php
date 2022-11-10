@@ -7,11 +7,14 @@ use App\Models\Friend;
 use App\Models\Post;
 use App\Models\Reply;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Builder;
 
 class FriendController extends Controller
 {
@@ -41,28 +44,39 @@ class FriendController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function newsfeed($id)
+    public function newsfeed()
     {
-        $users = User::all();
-        // $user = User::where('id', $id)->first();
+        // $users = User::all();
+        // $postDatas = Post::all();
+
         $user = Auth::user();
-        // dd($user);
-        $posts = Post::all();
 
-        $friends = $user->friendsFrom;
+        $likesPost = Auth::user()->likes_post;
 
-        // foreach ($posts as $post) {
-        //     foreach ($post->friends as $fr) {
-        //         Log::channel('custom')->info(($fr));
-        //     }
-        // }
-        // $friends = Friend::where('user_id', '=', $id)->orWhere('friend_id', '=', $id)->get();
-
+        $friendsTo = $user->friendsTo;
+        $friendsFrom = $user->friendsFrom;
+        $friends = $friendsTo->merge($friendsFrom);
         // dd($friends);
 
-        // Log::channel('custom')->info(($friends));
+        // $userData = DB::table('users')->join('friends', 'users.id', '=', 'friends.user_id')->get();
+        $userData = User::whereRelation('friendsTo', 'friend_id', Auth::user()->id)->where('status', 1)->get();
+        // dd($userData);
+        // $userData = User::whereHas('friendsTo')->get();
+        // $users = User::select()->join('friends', 'users.id', 'friends.user_id')->get();
+        // $users = User::with('friendsTo')->get();
+        $users = collect([]);
+        foreach ($userData as $us) {
+            foreach (User::whereRelation('friendsTo', 'friend_id', $us->id)->where('status', 1)->get() as $uss) {
+                $users = ($users->push($uss))->unique();
+            }
+        }
+        // dd($users[1]->avatars);
+        // $postDatas = DB::table('posts')->join('friends', 'posts.user_id', '=', 'friends.user_id')->join('users', 'users.id', '=', 'friends.user_id')->get();
+        // $postDatas = Post::select()->join('friends', 'posts.user_id', 'friends.user_id')->join('users', 'users.id', 'friends.user_id')->get();
+        $postDatas = $user->friendsPost->sortBy('id');
+        // dd($postDatas);
 
-        return view('main.user_newsfeed', ['users' => $users, 'posts' => $posts, 'friends' => $friends, 'user' => $user]);
+        return view('main.user_newsfeed', ['users' => $users, 'postDatas' => $postDatas, 'friendsTo' => $friendsTo, 'friendsFrom' => $friendsFrom, 'friends' => $friends, 'user' => $user, 'likesPost' => $likesPost, 'userData' => $userData]);
     }
 
 
@@ -73,11 +87,13 @@ class FriendController extends Controller
 
         $users = User::all();
 
-        $friend = Friend::where('user_id', '=', Auth::user()->id)->where('friend_id', '=', $id)->first();
-        $a = Auth::user()->friendsFrom;
-        dd($a);
-        // dd($friend);
-        return view('main.showfriends', ['user' => $user, 'users' => $users, 'friend' => $friend]);
+        // $friend = Friend::where('user_id', '=', Auth::user()->id)->where('friend_id', '=', $id)->first();
+        $friendsTo = Auth::user()->friendsTo;
+        $friendsFrom = Auth::user()->friendsFrom;
+        $friends = $friendsTo->merge($friendsFrom);
+        // dd($friends);
+        $userData = User::whereRelation('friendsTo', 'friend_id', Auth::user()->id)->where('status', 1)->get();
+        return view('main.showfriends', ['user' => $user, 'users' => $users, 'friends' => $friends, 'userData' => $userData]);
     }
 
     public function search(Request $request)
@@ -115,12 +131,14 @@ class FriendController extends Controller
         $friend->user_id = Auth::user()->id;
         $friend->friend_id = $id;
         $friend->approved = 0;
+        $friend->created_at = Carbon::now('Asia/Ho_Chi_Minh');
         $friend->save();
 
         $friend = new Friend();
         $friend->user_id = $id;
         $friend->friend_id = Auth::user()->id;
-        $friend->approved = 0;
+        $friend->approved = 1;
+        $friend->created_at = Carbon::now('Asia/Ho_Chi_Minh');
         $friend->save();
 
 
@@ -134,15 +152,21 @@ class FriendController extends Controller
         $post_1 = Auth::user()->posts;
         $post_2 = User::find($id)->posts;
 
-        $user_1 = Friend::all()->where('friend_id', '=', Auth::user()->id)->where('user_id', '=', $id)->first();
+        // $user_1 = Friend::all()->where('friend_id', '=', Auth::user()->id)->where('user_id', '=', $id)->first();
+        $user_1 = Auth::user()->friendsFrom->where('user_id', $id)->first();
+        // dd($user_1);
         $user_1->approved = 1;
+        $user_1->updated_at = Carbon::now('Asia/Ho_Chi_Minh');
         // foreach ($post_1 as $p1) {
         //     $p1->friends()->attach(['friend_id' => $user_1->id], ['post_id' => $p1->id]);
         // }
         $user_1->save();
 
-        $user_2 = Friend::all()->where('friend_id', '=', $id)->where('user_id', '=', Auth::user()->id)->first();
-        $user_2->approved = 1;
+        // $user_2 = Friend::all()->where('friend_id', '=', $id)->where('user_id', '=', Auth::user()->id)->first();
+        $user_2 = User::find($id)->friendsFrom->where('user_id', Auth::user()->id)->first();
+        $user_2->updated_at = Carbon::now('Asia/Ho_Chi_Minh');
+        // dd($user_2);
+        // $user_2->approved = 1;
         // foreach ($post_2 as $p2) {
         //     $p2->friends()->attach(['friend_id' => $user_2->id], ['post_id' => $p2->id]);
         // }
@@ -157,14 +181,13 @@ class FriendController extends Controller
         //
         $user = Auth::user();
 
-        $friendTo = $user->friendsTo->where('user_id', Auth::user()->id)->where('approved', 0);
-        foreach ($friendTo as $del_1) {
-            $del_1->delete();
-        }
-        $friendFrom = $user->friendsFrom->where('user_id', $id)->where('approved', 0);
-        foreach ($friendFrom as $del_2) {
-            $del_2->delete();
-        }
+        $friendTo = $user->friendsTo->where('user_id', Auth::user()->id)->where('friend_id', $id)->first();
+
+        $friendTo->delete();
+
+        $friendFrom = $user->friendsFrom->where('user_id', $id)->where('friend_id', Auth::user()->id)->first();
+        $friendFrom->delete();
+
         return back();
     }
 
@@ -172,14 +195,11 @@ class FriendController extends Controller
     {
         $user = Auth::user();
 
-        $friendTo = $user->friendsTo->where('user_id', Auth::user()->id)->where('approved', 0);
-        foreach ($friendTo as $del_1) {
-            $del_1->delete();
-        }
-        $friendFrom = $user->friendsFrom->where('user_id', $id)->where('approved', 0);
-        foreach ($friendFrom as $del_2) {
-            $del_2->delete();
-        }
+        $friendTo = $user->friendsTo->where('user_id', Auth::user()->id)->where('friend_id', $id)->first();
+        $friendTo->delete();
+
+        $friendFrom = $user->friendsFrom->where('user_id', $id)->where('friend_id', Auth::user()->id)->first();
+        $friendFrom->delete();
 
         return back();
     }
@@ -187,17 +207,19 @@ class FriendController extends Controller
 
     public function destroy($id)
     {
-        //
-        $user = Auth::user();
 
-        $friendTo = $user->friendsTo->where('user_id', Auth::user()->id)->where('friend_id', $id);
-        foreach ($friendTo as $del_1) {
-            $del_1->delete();
-        }
-        $friendFrom = $user->friendsFrom->where('user_id', $id)->where('friend_id', Auth::user()->id);
-        foreach ($friendFrom as $del_2) {
-            $del_2->delete();
-        }
+
+        $user = Auth::user();
+        $friendTo = $user->friendsTo->where('user_id', Auth::user()->id)->where('friend_id', $id)->first();
+
+
+
+        $friendTo->delete();
+
+        $friendFrom = $user->friendsFrom->where('user_id', $id)->where('friend_id', Auth::user()->id)->first();
+        $friendFrom->delete();
+
+
 
         return back();
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Main;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Friend;
+use App\Models\LikePost;
 use App\Models\Post;
 use App\Models\Reply;
 use App\Models\User;
@@ -42,6 +43,9 @@ class MainController extends Controller
     {
         $user = User::find($id);
 
+        $likesPost = $user->likes_post;
+        // dd($likesPost);
+
         $userlog = Auth::user();
         // dd(($userlog->friendsFrom));
         $users = User::all();
@@ -65,16 +69,25 @@ class MainController extends Controller
             ]
         ])->first();
 
-        // dd($friend);
 
-        // if ($friend == null) {
-        //     $friend = new Friend();
-        //     $friend->user_id = $id;
-        //     $friend->friend_id = $id;
-        //     $friend->approved = 1;
-        //     $friend->save();
-        // }
+        $friendsTo = Auth::user()->friendsTo;
+        $friendsFrom = Auth::user()->friendsFrom;
+        $friends = $friendsTo->merge($friendsFrom);
+        // dd($friends);
+        $userData = User::whereRelation('friendsTo', 'friend_id', $user->id)->where('status', 1)->get();
+        // dd($userData);
+        return view('main.user_detail', ['user' => $user, 'users' => $users, 'friend' => $friend, 'friends' => $friends, 'likesPost' => $likesPost, 'userData' => $userData]);
+    }
 
-        return view('main.user_detail', ['user' => $user, 'users' => $users, 'friend' => $friend]);
+    public function click()
+    {
+        $data = 'click';
+        return response()->json($data);
+    }
+
+    public function scroll()
+    {
+        $data = 'scroll';
+        return response()->json($data);
     }
 }
