@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\UserStatus;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\Reply;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,8 +41,11 @@ class CommentController extends Controller
     {
         // Storage::delete('public/comment_image/' . $comment->image_name);
         // dd($id);
-        $comment = Comment::where('id', $id);
-        $comment->firstOrFail()->delete();
+        $comment = Comment::where('id', $id)->first();
+        $reply = Reply::where('comment_id', $id);
+        // dd($reply);
+        $comment->delete();
+        $reply->delete();
         // dd($comment);
         return response()->json([]);
         // return redirect()->route('default');

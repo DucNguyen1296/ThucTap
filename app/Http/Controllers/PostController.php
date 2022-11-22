@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
+use App\Models\Reply;
 use App\Models\User;
 use Carbon\Carbon;
 use DOMDocument;
@@ -80,6 +82,8 @@ class PostController extends Controller
                 'link' => $link,
                 'link_image' => $link_img
             ]);
+
+            $p['link_image'] = $link_img;
         }
         // $p = Post::where('title', $title)->first();
         // dd($path);
@@ -90,23 +94,28 @@ class PostController extends Controller
     public function update_post(Request $request, $id)
     {
         $user = Auth::user();
-        $update_post = $request->input('content');
-        $post = Post::where('id', $id)->first();
+        $post = Post::find($id);
+        $title = $request->input('title');
+        $post_update = $request->input('post');
+        $link = $request->input('link');
 
-        if ($request->hasFile('update_img')) {
-            Storage::delete('public/post_image/' . $post->image_name);
+        if ($request->hasFile('image')) {
 
+            if ($post->image_name != null) {
+                Storage::delete('public/post_image/' . $post->image_name);
+            }
             $validated = $request->validate([
-                'update_img' => 'required|mimes:jpg,png,jpeg'
+                'image' => 'required|mimes:jpg,png,jpeg'
             ]);
 
 
-            $name = $request->file('update_img')->hashName();
-            $path = $request->file('update_img')->storeAs('public/post_image', $name);
+            $name = $request->file('image')->hashName();
+            $path = $request->file('image')->storeAs('public/post_image', $name);
 
             Post::where('id', $id)->update(
                 [
-                    'post' => $update_post,
+                    'title' => $title,
+                    'post' => $post_update,
                     'image_name' => $name,
                     'image_path' => $path,
                     'updated_at' => Carbon::now('Asia/Ho_Chi_Minh')
@@ -115,22 +124,54 @@ class PostController extends Controller
         } else {
             Post::where('id', $id)->update(
                 [
-                    'post' => $update_post,
+                    'title' => $title,
+                    'post' => $post_update,
                     'updated_at' => Carbon::now('Asia/Ho_Chi_Minh')
                 ]
             );
         }
 
-        return redirect()->route('user.profile', ['name' => $user->name]);
+        if ($request->filled('link')) {
+            $url = file_get_contents($link);
+
+            $DOM = new DOMDocument('1.0', 'UTF-8');
+            $internalErrors = libxml_use_internal_errors(true);
+            $DOM->loadHTML($url);
+            libxml_use_internal_errors($internalErrors);
+            $imgs = $DOM->getElementsByTagName('img');
+
+            // $title = $DOM->getElementsByTagName('title');
+
+            foreach ($imgs as $img) {
+                // Log::channel('custom')->info($content->getAttribute('data-src'));
+                if ($img->getAttribute('data-src') != "") {
+                    $link_img = $img->getAttribute('data-src');
+                }
+            }
+            Post::where('id', $id)->update([
+                'link' => $link,
+                'link_image' => $link_img
+            ]);
+        }
+
+        // return redirect()->route('user.profile', ['name' => $user->name]);
+        return back();
     }
 
     public function delete_post($id)
     {
         $user = Auth::user();
-        $post = $user->posts->find($id);
+        $post = Post::find($id);
+        $comment = Comment::where('post_id', $id);
+        $reply = Reply::where('post_id', $id);
         // dd($post);
-        Storage::delete('public/post_image/' . $post->image_name);
+        if ($post->image_name != null) {
+            Storage::delete('public/post_image/' . $post->image_name);
+        }
         Post::where('id', $id)->firstOrFail()->delete();
-        return redirect()->route('user.profile', ['name' => $user->name]);
+        $comment->delete();
+        $reply->delete();
+        // return redirect()->route('user.profile', ['name' => $user->name]);
+        return back();
     }
 }

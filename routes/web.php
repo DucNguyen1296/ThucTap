@@ -78,7 +78,7 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/register', [RegisterController::class, 'register']);
 
     // Route Access Login
-    Route::post('/trangchu', [LoginController::class, 'login'])->name('user.login');
+    Route::post('/', [LoginController::class, 'login'])->name('user.login');
 });
 
 ////////////////// ADMIN ROUTE ////////////////////
@@ -167,13 +167,20 @@ Route::middleware(['MyMiddleWare'])->group(function () {
     });
     // Route to show the user
     Route::get('/user/{id}', [MainController::class, 'main_user_detail'])->name('user.profile.detail');
+
+    // Route About
+    Route::get('/about/{id}', [MainController::class, 'main_user_about'])->name('user.profile.about');
+
+    // Route Edit
+    Route::get('editprofile', [EditProfileController::class, 'edit_index'])->name('user.edit.profile');
+
+    // Route change Password
+    Route::get('change_password', [PasswordController::class, 'change_index'])->name('user.change.password');
+
+    //Friend
+    Route::get('/show_friend/{id?}', [FriendController::class, 'show'])->name('user.friend.show');
 });
 
-// Route Edit
-Route::get('editprofile', [EditProfileController::class, 'edit_index']);
-
-// Route change Password
-Route::get('change_password', [PasswordController::class, 'change_index']);
 
 // Route Log Out
 Route::get('/logout', [LogOutController::class, 'logout']);
@@ -188,7 +195,7 @@ Route::get('/main_post/{id}', [MainController::class, 'main_post_detail'])->name
 /////// Friend
 Route::post('/add_friend/{id}', [FriendController::class, 'store'])->name('user.friend.store');
 Route::delete('/delete_friend/{id}', [FriendController::class, 'destroy'])->name('user.friend.delete');
-Route::get('/show_friend/{id?}', [FriendController::class, 'show'])->name('user.friend.show');
+
 
 // Friend request
 Route::post('/accept/{id?}', [FriendController::class, 'accept'])->name('user.friend.accept');

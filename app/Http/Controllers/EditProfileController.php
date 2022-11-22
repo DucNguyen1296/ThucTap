@@ -14,8 +14,10 @@ class EditProfileController extends Controller
     //
     public function edit_index()
     {
-        $datas = Auth::user();
-        return view('editprofile', ['data' => $datas]);
+        $user = Auth::user();
+        $userData = User::whereRelation('friendsTo', 'friend_id', Auth::user()->id)->where('status', 1)->get();
+        $message = $user->friendsMessenger;
+        return view('trangchu.pages.editprofile', ['user' => $user, 'userData' => $userData, 'message' => $message]);
     }
 
     public function update(Request $request)
@@ -32,6 +34,6 @@ class EditProfileController extends Controller
             'title' => $title
         ]);
         Session::flash('change_profile', 'Bạn đã thay đổi thông tin thành công');
-        return redirect()->route('user.profile', ['name' => Auth::user()->name]);
+        return redirect()->back();
     }
 }

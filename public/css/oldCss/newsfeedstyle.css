@@ -1,0 +1,300 @@
+*,
+::after,
+::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 62.5%;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.container__body {
+    max-width: 1400px !important;
+    background-color: rgba(255, 255, 255, 0.092);
+    /* margin-right: 0px !important; */
+    /* margin-left: 0px !important; */
+}
+
+.scroll-lock {
+    overflow: 1;
+}
+
+.scroll-show {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.scroll-fixed {
+    top: 112px;
+    bottom: 0;
+    position: fixed;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.scroll-fixed2 {
+    top: 200px;
+    right: 100px;
+    bottom: 0;
+    position: fixed;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.sticky {
+    /* position: fixed; */
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    /* width: 100%; */
+}
+
+.card__main {
+    margin-top: 2rem;
+    display: block;
+    width: 30rem;
+}
+
+.card-header-img img {
+    width: 80px;
+    height: 80px;
+    clip-path: circle(50% at 50% 50%);
+}
+
+.detail-img img {
+    width: 80px;
+    height: 80px;
+    clip-path: circle(50% at 50% 50%);
+}
+
+.dropdown-user-info {
+    font-weight: bold;
+    padding-left: 10px;
+}
+
+.card-body__link img {
+    width: 100%;
+}
+
+.container-fluid div {
+    position: relative;
+}
+
+.search__result {
+    position: absolute;
+    background-color: #fff;
+    z-index: 10;
+    width: 100%;
+}
+
+.row__item {
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.row__item:hover {
+    background-color: rgba(85, 180, 235, 0.777);
+}
+
+.row__item--image img {
+    width: 40px;
+    height: 40px;
+    clip-path: circle(50% at 50% 50%);
+}
+
+.form__group {
+    width: 100%;
+}
+
+.row__item--user {
+    margin-left: 1rem;
+}
+
+.row__item--user a {
+    text-decoration: none;
+}
+
+.advertisement-right {
+    width: 20rem;
+}
+
+/*---Sticky the advertise----*/
+.post__advertise {
+    position: sticky;
+    top: 80px;
+}
+
+.advertisement-left::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.advertisement-left::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #f5f5f5;
+}
+
+.advertisement-left::-webkit-scrollbar {
+    width: 10px;
+    background-color: #f5f5f5;
+}
+
+.advertisement-left::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #dbd4d4;
+}
+
+/* right */
+.advertisement-right::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+advertisement-right .advertisement-right::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #f5f5f5;
+}
+
+.advertisement-right::-webkit-scrollbar {
+    width: 10px;
+    background-color: #f5f5f5;
+}
+
+.advertisement-right::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #dbd4d4;
+}
+
+.advertisement-right-content img {
+    width: 120px;
+    height: 120px;
+    border: none;
+    border-radius: 5px;
+}
+
+.advertisement-element {
+    width: 19rem;
+    height: 100%;
+}
+
+.advertisement-content {
+    padding-left: 7px;
+    width: 100%;
+    font-weight: bold;
+}
+
+.advertisement-link {
+    padding-left: 7px;
+    width: 100%;
+}
+
+.advertisement-left {
+    width: 20rem;
+}
+
+.advertisement-left img {
+    width: 40px;
+    height: 40px;
+    clip-path: circle(50% at 50% 50%);
+}
+
+.advertisement-left .fa-solid {
+    width: 40px;
+    height: 40px;
+}
+
+.list-group-item {
+    border: none !important;
+}
+
+.link {
+    margin-bottom: 0.5rem !important;
+}
+
+.dropdown-header {
+    font-weight: bold;
+    font-size: 1.5rem !important;
+    text-align: center;
+    border-bottom: 1px solid #000;
+}
+
+.friend-item {
+    padding-left: 20px;
+}
+
+.friend-button button {
+    padding-right: 10px;
+}
+
+.chat-item {
+    width: 300px !important;
+}
+
+.birthday {
+    width: 19rem;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+.birthday-header {
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.birthday-content {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.carousel-index {
+    border: #777 solid;
+    border-radius: 5px;
+    width: 30rem;
+}
+
+.carousel-main {
+    margin: 1rem 1rem;
+}
+
+.carousel-button {
+    width: 100%;
+    padding-bottom: 10px;
+    border-bottom: #000 solid;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.carousel {
+    padding-top: 10px;
+}
+
+.chat-box {
+    width: 19rem;
+    padding-top: 10px;
+    padding-bottom: 30px;
+}
+
+.chat-main img {
+    width: 40px;
+    height: 40px;
+    clip-path: circle(50% at 50% 50%);
+}
+
+.comment-footer-comment:hover {
+    text-decoration-line: underline;
+    cursor: pointer;
+}

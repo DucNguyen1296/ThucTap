@@ -67,6 +67,11 @@ class User extends Authenticatable
         return $this->hasManyThrough(Post::class, Friend::class, 'friend_id', 'user_id', 'id', 'user_id');
     }
 
+    public function friendsMessenger()
+    {
+        return $this->hasManyThrough(Messenger::class, Friend::class, 'friend_id', 'user_id', 'id', 'user_id');
+    }
+
     // public function friends()
     // {
     //     return $this->friendsFrom->merge($this->friendsTo);

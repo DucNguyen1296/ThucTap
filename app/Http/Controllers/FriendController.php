@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Friend;
+use App\Models\Messenger;
 use App\Models\Post;
 use App\Models\Reply;
 use App\Models\User;
@@ -31,11 +32,8 @@ class FriendController extends Controller
         $friend = Friend::where('user_id', '=', $user1->id)->where('friend_id', '=', $user2->id)->first();
         // dd($friend);
         $users = User::all();
-        $posts = Post::all();
-        $comments = Comment::all();
-        $replies = Reply::all();
 
-        return view('main.timeline', ['user1' => $user1, 'user2' => $user2, 'friend' => $friend, 'users' => $users, 'posts' => $posts]);
+        return view('main.timeline', ['user1' => $user1, 'user2' => $user2, 'friend' => $friend, 'users' => $users]);
     }
 
     /**
@@ -73,10 +71,12 @@ class FriendController extends Controller
         // dd($users[1]->avatars);
         // $postDatas = DB::table('posts')->join('friends', 'posts.user_id', '=', 'friends.user_id')->join('users', 'users.id', '=', 'friends.user_id')->get();
         // $postDatas = Post::select()->join('friends', 'posts.user_id', 'friends.user_id')->join('users', 'users.id', 'friends.user_id')->get();
-        $postDatas = $user->friendsPost->sortBy('id');
+        $postDatas = $user->friendsPost->sortByDesc('created_at');
         // dd($postDatas);
+        $message = $user->friendsMessenger;
 
-        return view('main.user_newsfeed', ['users' => $users, 'postDatas' => $postDatas, 'friendsTo' => $friendsTo, 'friendsFrom' => $friendsFrom, 'friends' => $friends, 'user' => $user, 'likesPost' => $likesPost, 'userData' => $userData]);
+        // return view('main.user_newsfeed', ['users' => $users, 'postDatas' => $postDatas, 'friendsTo' => $friendsTo, 'friendsFrom' => $friendsFrom, 'friends' => $friends, 'user' => $user, 'likesPost' => $likesPost, 'userData' => $userData]);
+        return view('trangchu.home', ['users' => $users, 'postDatas' => $postDatas, 'friendsTo' => $friendsTo, 'friendsFrom' => $friendsFrom, 'friends' => $friends, 'user' => $user, 'likesPost' => $likesPost, 'userData' => $userData, 'message' => $message]);
     }
 
 
@@ -85,15 +85,30 @@ class FriendController extends Controller
         //
         $user = User::find($id);
 
-        $users = User::all();
 
-        // $friend = Friend::where('user_id', '=', Auth::user()->id)->where('friend_id', '=', $id)->first();
-        $friendsTo = Auth::user()->friendsTo;
-        $friendsFrom = Auth::user()->friendsFrom;
+        $friend = Friend::where([
+            [
+                'user_id', '=', Auth::user()->id
+            ],
+            [
+                'friend_id', '=', $id
+            ]
+        ])->orWhere([
+            [
+                'user_id', '=', $id
+            ],
+            [
+                'friend_id', '=', Auth::user()->id
+            ]
+        ])->first();
+        $friendsTo = $user->friendsTo;
+        $friendsFrom = $user->friendsFrom;
         $friends = $friendsTo->merge($friendsFrom);
-        // dd($friends);
         $userData = User::whereRelation('friendsTo', 'friend_id', Auth::user()->id)->where('status', 1)->get();
-        return view('main.showfriends', ['user' => $user, 'users' => $users, 'friends' => $friends, 'userData' => $userData]);
+        // dd($friendsFrom);
+        $message = $user->friendsMessenger;
+        // dd($friendsFrom->where('approved', 1)->where('id', '!=', $user->id)[2]->users);
+        return view('trangchu.pages.friend', ['user' => $user, 'friend' => $friend, 'friends' => $friends, 'friendsFrom' => $friendsFrom, 'friendsTo' => $friendsTo, 'userData' => $userData, 'message' => $message]);
     }
 
     public function search(Request $request)
@@ -107,7 +122,7 @@ class FriendController extends Controller
             if (count($data) > 0) {
                 foreach ($data as $dt) {
                     // $output .= '<li><a href="/user/' . $dt->id . '">' . $dt->name . '</a></li>';
-                    $output .= '<li class="row__item"><div class="d-flex flex-row bd-highlight "><div class="row__item--image"><img src="/storage/avatar/' . $dt->avatars->avatar_name . '"></div><div class="row__item--user">
+                    $output .= '<li class="row__item"><div class="d-flex flex-row bd-highlight "><div class="row__item--image"><img src="/storage/avatar/' . $dt->avatars->avatar_name . '" width="50px" height="50px"></div><div class="row__item--user">
                     <a href="/user/' . $dt->id . '">' . $dt->name . '</a>
                         </div>
                     </div>
@@ -212,14 +227,10 @@ class FriendController extends Controller
         $user = Auth::user();
         $friendTo = $user->friendsTo->where('user_id', Auth::user()->id)->where('friend_id', $id)->first();
 
-
-
         $friendTo->delete();
 
         $friendFrom = $user->friendsFrom->where('user_id', $id)->where('friend_id', Auth::user()->id)->first();
         $friendFrom->delete();
-
-
 
         return back();
     }

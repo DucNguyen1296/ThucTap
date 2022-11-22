@@ -74,9 +74,34 @@ class MainController extends Controller
         $friendsFrom = Auth::user()->friendsFrom;
         $friends = $friendsTo->merge($friendsFrom);
         // dd($friends);
-        $userData = User::whereRelation('friendsTo', 'friend_id', $user->id)->where('status', 1)->get();
+        $userData = User::whereRelation('friendsTo', 'friend_id', Auth::user()->id)->where('status', 1)->get();
         // dd($userData);
-        return view('main.user_detail', ['user' => $user, 'users' => $users, 'friend' => $friend, 'friends' => $friends, 'likesPost' => $likesPost, 'userData' => $userData]);
+        $message = $user->friendsMessenger;
+        // return view('main.user_detail', ['user' => $user, 'users' => $users, 'friend' => $friend, 'friends' => $friends, 'likesPost' => $likesPost, 'userData' => $userData]);
+        return view('trangchu.pages.timeline', ['user' => $user, 'users' => $users, 'friend' => $friend, 'friends' => $friends, 'likesPost' => $likesPost, 'userData' => $userData, 'message' => $message]);
+    }
+
+    public function main_user_about($id)
+    {
+        $friend = Friend::where([
+            [
+                'user_id', '=', Auth::user()->id
+            ],
+            [
+                'friend_id', '=', $id
+            ]
+        ])->orWhere([
+            [
+                'user_id', '=', $id
+            ],
+            [
+                'friend_id', '=', Auth::user()->id
+            ]
+        ])->first();
+        $user = User::find($id);
+        $userData = User::whereRelation('friendsTo', 'friend_id', Auth::user()->id)->where('status', 1)->get();
+        $message = $user->friendsMessenger;
+        return view('trangchu.pages.about', ['user' => $user, 'userData' => $userData, 'friend' => $friend, 'message' => $message]);
     }
 
     public function click()

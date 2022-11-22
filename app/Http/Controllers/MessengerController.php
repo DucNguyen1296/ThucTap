@@ -37,8 +37,9 @@ class MessengerController extends Controller
             ]
         ])->orderBy('created_at', 'ASC')->get();
         // dd($messengers);
-
-        return view("main.messenger", ['userlog' => $user, 'userChat' => $userChat, 'userData' => $userData, 'friends' => $friends, 'messengers' => $messengers]);
+        $message = $user->friendsMessenger;
+        // return view("main.messenger", ['user' => $user, 'userlog' => $user, 'userChat' => $userChat, 'userData' => $userData, 'friends' => $friends, 'messengers' => $messengers]);
+        return view("trangchu.pages.message", ['user' => $user, 'userChat' => $userChat, 'userData' => $userData, 'friends' => $friends, 'messengers' => $messengers, 'message' => $message]);
     }
 
     public function store(Request $request, $id)
@@ -56,6 +57,7 @@ class MessengerController extends Controller
         // $messenger->friend_id = $id;
         // $messenger->messenger = $request->input('messenger');
         // $messenger->created_at = Carbon::now('Asia/Ho_Chi_Minh');
+        // $data = $messenger;
         // $messenger->save();
         return response()->json($data);
     }

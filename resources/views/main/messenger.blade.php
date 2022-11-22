@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" type="image/png" href="{{ asset('/storage/logo/facebook.png') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url('/css/messengerstyle.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url('/css/mainstyle.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url('/css/newsfeedstyle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url('/css/oldCss/messengerstyle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url('/css/oldCss/mainstyle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url('/css/oldCss/newsfeedstyle.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
@@ -179,7 +179,7 @@
                 <div class="msg-header-img">
                     <img src="{{ asset('/storage/avatar/' . $userChat->avatars->avatar_name) }}" alt="">
                 </div>
-                <div class="active">
+                <div class="actived">
                     <h4>{{ $userChat->name }}</h4>
                     <h6>{{ $userChat->last_active->diffForHumans() }}</h6>
                 </div>
@@ -279,7 +279,9 @@
             _token: _token
         }).then(function(response) {
             console.log(response.data);
-            let html = '<div class="outgoing-chats"><div class="outgoing-chats-msg"><p>' + response.data
+            let html =
+                '<div class="outgoing-chats d-flex flex-row"><div class="outgoing-chats-msg"><p>' +
+                response.data
                 .messenger +
                 '</p><span class="time">Vừa xong</span></div><div class="outgoing-chats-img"><img src="{{ asset('/storage/avatar/' . Auth::user()->avatars->avatar_name) }}"alt=""></div></div>';
             document.getElementById('input-box').reset();

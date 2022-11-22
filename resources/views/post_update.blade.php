@@ -32,7 +32,7 @@
 
                 <div class="btn btn__post">
                     <label for="">Add image</label>
-                    <input class="btn__post--post" type="file" name="update_img" />
+                    <input class="btn__post--post" type="file" name="image" />
                 </div>
                 <div class="post__update--button">
                     <input class="btn" type="submit" value="Update post" />

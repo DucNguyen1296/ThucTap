@@ -16,7 +16,10 @@ class PasswordController extends Controller
     //
     public function change_index()
     {
-        return view('/password.change_password');
+        $user = Auth::user();
+        $userData = User::whereRelation('friendsTo', 'friend_id', Auth::user()->id)->where('status', 1)->get();
+        $message = $user->friendsMessenger;
+        return view('trangchu.pages.changepassword', ['user' => $user, 'userData' => $userData, 'message' => $message]);
     }
 
     public function updatePassword(Request $request)
@@ -25,10 +28,16 @@ class PasswordController extends Controller
         $new_password = $request->input('new_password');
         $retype_newpassword = $request->input('retype_newpassword');
 
-        $validation = $request->validate([
-            'old_password' => 'required',
-            'new_password' => 'required || min:3'
-        ]);
+        $validation = $request->validate(
+            [
+                'old_password' => 'required',
+                'new_password' => 'required || min:3'
+            ],
+            [
+                'old_password.required' => 'Mật khẩu cũ phải có',
+                'new_password.required' => 'Mật khẩu mới yêu cầu tối thiểu 3 ký tự'
+            ]
+        );
 
 
         if (!Hash::check($old_password, Auth::user()->password)) {
