@@ -164,7 +164,7 @@ class PostController extends Controller
         $post = Post::find($id);
         $comment = Comment::where('post_id', $id);
         $reply = Reply::where('post_id', $id);
-        // dd($post);
+
         if ($post->image_name != null) {
             Storage::delete('public/post_image/' . $post->image_name);
         }
