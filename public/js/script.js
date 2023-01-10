@@ -320,7 +320,7 @@ jQuery(document).ready(function ($) {
     // login & register form
     $("button.signup").on("click", function () {
         $(".login-reg-bg").addClass("show");
-        return false;
+        // return false;
     });
 
     $(".already-have").on("click", function () {

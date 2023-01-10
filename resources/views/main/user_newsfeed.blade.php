@@ -1014,6 +1014,24 @@
             console.log(error);
         })
     })
+    // let repDeleteBtn = document.querySelectorAll('.reply__button--delete');
+    // console.log(repDeleteBtn);
+    // for (let i = 0; i < repDeleteBtn; i++) {
+    //     repDeleteBtn[i].onclick = function(e) {
+    //         e.preventDefault();
+    //         let reply_id = e.target.getAttribute("data-id");
+    //         console.log(reply_id);
+    //         let text = "Bạn muốn xóa phản hồi này chứ?";
+    //         if (confirm(text) == true) {
+    //             axios.delete('/delete_reply/' + reply_id, {}).then(function(response) {
+    //                 console.log(response);
+    //                 $('.reply_id' + reply_id).remove();
+    //             }).catch(function(error) {
+    //                 console.log(error);
+    //             })
+    //         }
+    //     }
+    // }
 </script>
 
 <script>

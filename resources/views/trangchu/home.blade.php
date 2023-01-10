@@ -31,7 +31,7 @@
                                 </div><!-- add post new box -->
 
                                 <div class="loadMore">
-                                    @foreach ($postDatas as $post)
+                                    @foreach ($postDatas->sortByDesc('created_at') as $post)
                                         @foreach ($friends as $friend)
                                             @if (($post->user_id == $friend->friend_id && $friend->approved == 1 && $post->user->status == 1) ||
                                                 ($post->user_id == Auth::user()->id && $post->user->status == 1))
@@ -429,7 +429,7 @@
                                                                                                 action="{{ route('user.reply.create', ['id' => $comment->id]) }}"
                                                                                                 method="POST">
                                                                                                 @csrf
-                                                                                                <textarea placeholder="Viết phản hồi" name="reply" id=""></textarea>
+                                                                                                <textarea placeholder="Viết phản hồi" name="reply" id="reply__comment{{ $comment->id }}"></textarea>
                                                                                                 <div class="add-smiles">
                                                                                                     <span
                                                                                                         class="em em-expressionless"
@@ -465,14 +465,15 @@
                                                                                                     class="reply-button"
                                                                                                     type="submit"
                                                                                                     id="comment__reply--button"
-                                                                                                    data-id=""></button>
+                                                                                                    data-id="{{ $comment->id }}"></button>
                                                                                             </form>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
 
-                                                                                <ul>
-                                                                                    @foreach ($comment->replies as $reply)
+                                                                                <ul
+                                                                                    class="reply_comment{{ $comment->id }}">
+                                                                                    @foreach ($comment->replies->sortByDesc('created_at') as $reply)
                                                                                         <li
                                                                                             class="reply_id{{ $reply->id }}">
                                                                                             <div class="comet-avatar">
@@ -518,7 +519,7 @@
                                                                                                                     @csrf
                                                                                                                     @method('DELETE')
                                                                                                                     <button
-                                                                                                                        class="dropdown-item"
+                                                                                                                        class="dropdown-item reply__button--delete"
                                                                                                                         id="reply__button--delete"
                                                                                                                         type="submit"
                                                                                                                         data-id="{{ $reply->id }}">Xóa

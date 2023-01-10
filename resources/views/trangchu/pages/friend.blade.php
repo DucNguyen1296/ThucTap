@@ -15,7 +15,7 @@
                                         <ul class="nav nav-tabs">
                                             <li class="nav-item"><a class="active" href="#frends" data-toggle="tab">My
                                                     Friends</a>
-                                                <span>{{ $friendsFrom->where('approved', 1)->where('id', '!=', $user->id)->count() }}</span>
+                                                <span>{{ $friendsFrom->where('approved', 1)->where('user_id', '!=', $user->id)->count() }}</span>
                                             </li>
                                             <li class="nav-item"><a class="" href="#frends-req"
                                                     data-toggle="tab">Friend
@@ -27,7 +27,7 @@
                                         <div class="tab-content">
                                             <div class="tab-pane active fade show " id="frends">
                                                 <ul class="nearby-contct">
-                                                    @foreach ($friendsFrom->where('approved', 1)->where('id', '!=', $user->id) as $us)
+                                                    @foreach ($friendsFrom->where('approved', 1)->where('user_id', '!=', $user->id) as $us)
                                                         <li>
                                                             <div class="nearly-pepls">
                                                                 <figure>
@@ -73,7 +73,6 @@
                                                                             title="">{{ $us->users->name }}</a>
                                                                     </h4>
                                                                     <span>{{ $us->users->role }}</span>
-
                                                                     <form
                                                                         action="{{ route('user.friend.accept', ['id' => $us->users->id]) }}"
                                                                         method="POST">
@@ -93,7 +92,6 @@
                                                                             Từ chối
                                                                         </button>
                                                                     </form>
-
                                                                 </div>
                                                             </div>
                                                         </li>

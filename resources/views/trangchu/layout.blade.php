@@ -789,8 +789,8 @@
                 let post_id = e.target.getAttribute('data-id');
                 console.log(post_id);
                 let comment = $('#post__comment' + post_id).val();
-                console.log(comment);
-                console.log(document.querySelectorAll(".post-comt-box textarea"));
+                // console.log(comment);
+
                 axios({
                     method: "POST",
                     url: "/comment/" + post_id,
@@ -857,27 +857,56 @@
     </script>
 
     <script>
-        document.getElementById('reply__button--delete').addEventListener('click', function(e) {
+        let repBtn = document.querySelectorAll('.reply-button');
+
+        for (let i = 0; i < repBtn.length; i++) {
+            repBtn[i].onclick = function(e) {
+                e.preventDefault();
+                let comment_id = e.target.getAttribute('data-id');
+
+                let reply = $('#reply__comment' + comment_id).val();
+
+                axios({
+                    method: 'POST',
+                    url: '/reply_comment/' + comment_id,
+                    data: {
+                        reply: reply,
+                    }
+                }).then(function(response) {
+
+                    $('.reply_comment' + comment_id).prepend(
+                        '<li class="reply_id' + response.data.id +
+                        '"><div class="comet-avatar"><img src="{{ asset('/storage/avatar/' . Auth::user()->avatars->avatar_name) }}"alt="avatar"></div><div class="we-comment reply_id' +
+                        response.data.id +
+                        '"><div class="coment-head"><h5><a href="{{ url('user/' . Auth::user()->id) }}"title="">{{ Auth::user()->name }}</a></h5><span>Vừa xong</span></div><p>' +
+                        response.data.reply + '</p></div></li>');
+                }).catch(function(error) {
+                    console.log(error);
+                });
+            }
+        }
+
+        
+
+        $(document).on('click', '#reply__button--delete', function(e) {
             e.preventDefault();
             let reply_id = e.target.getAttribute("data-id");
             // console.log(reply_id);
-            let text = "Bạn muốn xóa phản hồi này chứ?";
-            if (confirm(text) == true) {
-                axios.delete('/delete_reply/' + reply_id).then(function(response) {
-                    $('.reply_id' + reply_id).remove();
-                }).catch(function(error) {
-                    console.log(error);
-                })
-            }
+            confirm("Are You sure want to delete this Reply !");
+            axios.delete('/delete_reply/' + reply_id).then(function(response) {
+                $('.reply_id' + reply_id).remove();
+            }).catch(function(error) {
+                console.log(error);
+            })
         })
     </script>
 
     <script type="text/javascript">
         // const btnMessengerR = document.getElementById('messenger-button-right');
         const btnMessengerR = document.querySelectorAll('.messenger-button-right');
-        console.log(btnMessengerR);
+        // console.log(btnMessengerR);
         const messengerBoxR = document.querySelectorAll('.messenger-content-right');
-        console.log(messengerBoxR);
+        // console.log(messengerBoxR);
         // const friend_id_R = btnMessengerR.getAttribute('data-id');
         for (let i = 0; i < btnMessengerR.length; i++) {
             btnMessengerR[i].onclick = function(e) {

@@ -280,7 +280,7 @@
                                                             @foreach ($users as $us)
                                                                 @foreach ($post->comments as $comment)
                                                                     @if ($us->id == $comment->user_id)
-                                                                        <li>
+                                                                        <li class="cmt_id{{ $comment->id }}">
                                                                             <div class="comet-avatar">
                                                                                 <img src="{{ asset('/storage/avatar/' . $us->avatars->avatar_name) }}"
                                                                                     alt="avatar">
@@ -291,9 +291,9 @@
                                                                                             title="">{{ $us->name }}</a>
                                                                                     </h5>
                                                                                     <span>{{ $comment->created_at->diffForHumans() }}</span>
-                                                                                    <div class="we-reply" href="#"
-                                                                                        title="Reply"><i
-                                                                                            class="fa fa-reply reply-button"></i>
+                                                                                    <div class="we-reply" title="Reply">
+                                                                                        <i
+                                                                                            class="fa fa-reply reply-button-fa"></i>
                                                                                     </div>
                                                                                     @if ($comment->user_id == Auth::user()->id || $comment->post->user_id == Auth::user()->id)
                                                                                         <div class="dropdown drop-comment">
@@ -310,10 +310,10 @@
                                                                                                 aria-labelledby="dropdownMenu2">
                                                                                                 @if ($comment->user_id == Auth::user()->id)
                                                                                                     <button
-                                                                                                    class="dropdown-item"
-                                                                                                    type="button"
-                                                                                                    data-toggle="modal"
-                                                                                                    data-target="#exampleModal{{ $comment->id }}">Chỉnh
+                                                                                                        class="dropdown-item"
+                                                                                                        type="button"
+                                                                                                        data-toggle="modal"
+                                                                                                        data-target="#exampleModal{{ $comment->id }}">Chỉnh
                                                                                                         sửa bình
                                                                                                         luận</button>
                                                                                                 @endif
@@ -333,103 +333,122 @@
                                                                                                 </form>
                                                                                             </div>
                                                                                             <div class="modal fade"
-                                                                            id="exampleModal{{ $comment->id }}"
-                                                                            tabindex="-1" role="dialog"
-                                                                            aria-labelledby="exampleModalLabel{{ $comment->id }}"
-                                                                            aria-hidden="true">
-                                                                        <div class="modal-dialog" role="document">
-                                                                            <div class="modal-content">
-                                                                                <div class="modal-header">
-                                                                                    <h5 class="modal-title"
-                                                                                        id="exampleModalLabel{{ $comment->id }}">
-                                                                                        <div class="dropdown-user-info">
-                                                                                            {{ Auth::user()->name }}
-                                                                                        </div>
-                                                                                    </h5>
-                                                                                    <button type="button"
-                                                                                        class="close"
-                                                                                        data-dismiss="modal"
-                                                                                        aria-label="Close">
-                                                                                        <span
-                                                                                            aria-hidden="true">&times;</span>
-                                                                                    </button>
-                                                                                </div>
-                                                                                <div class="modal-body">
-                                                                                    <form
-                                                                                        action="{{ route('user.comment.update', ['id' => $comment->id]) }}"
-                                                                                        method="POST"
-                                                                                        id="comment__update{{ $comment->id }}">
-                                                                                        @method('PUT')
-                                                                                        @csrf
-                                                                                        <div class="mb-3">
-                                                                                            <label for="post__text">Nội
-                                                                                                dung bình luận</label>
-                                                                                            <textarea name="update_comment" class="form-control" rows="3" style="resize:none" data-id="{{ $comment->id }}"
-                                                                                                id="comment__content--update{{ $comment->id }}">{{ $comment->comment }}
-                                                                                            </textarea>
-                                                                                        </div>
-                                                                                        <button class="btn btn-primary modal__button--update"
-                                                                                            type="submit"
-                                                                                            data-id="{{ $comment->id }}"
-                                                                                            id="comment__button--update">Cập
-                                                                                            nhập</button>
-                                                                                    </form>
-                                                                                </div>
+                                                                                                id="exampleModal{{ $comment->id }}"
+                                                                                                tabindex="-1"
+                                                                                                role="dialog"
+                                                                                                aria-labelledby="exampleModalLabel{{ $comment->id }}"
+                                                                                                aria-hidden="true">
+                                                                                                <div class="modal-dialog"
+                                                                                                    role="document">
+                                                                                                    <div
+                                                                                                        class="modal-content">
+                                                                                                        <div
+                                                                                                            class="modal-header">
+                                                                                                            <h5 class="modal-title"
+                                                                                                                id="exampleModalLabel{{ $comment->id }}">
+                                                                                                                <div
+                                                                                                                    class="dropdown-user-info">
+                                                                                                                    {{ Auth::user()->name }}
+                                                                                                                </div>
+                                                                                                            </h5>
+                                                                                                            <button
+                                                                                                                type="button"
+                                                                                                                class="close"
+                                                                                                                data-dismiss="modal"
+                                                                                                                aria-label="Close">
+                                                                                                                <span
+                                                                                                                    aria-hidden="true">&times;</span>
+                                                                                                            </button>
+                                                                                                        </div>
+                                                                                                        <div
+                                                                                                            class="modal-body">
+                                                                                                            <form
+                                                                                                                action="{{ route('user.comment.update', ['id' => $comment->id]) }}"
+                                                                                                                method="POST"
+                                                                                                                id="comment__update{{ $comment->id }}">
+                                                                                                                @method('PUT')
+                                                                                                                @csrf
+                                                                                                                <div
+                                                                                                                    class="mb-3">
+                                                                                                                    <label
+                                                                                                                        for="post__text">Nội
+                                                                                                                        dung
+                                                                                                                        bình
+                                                                                                                        luận</label>
+                                                                                                                        <textarea 
+                                                                                                                        name="update_comment" class="form-control" rows="3" style="resize:none"
+                                                                                                                         data-id="{{ $comment->id }}" id="comment__content--update{{ $comment->id }}">{{ $comment->comment }}
+                                                                                                                    </textarea>
+                                                                                                                </div>
+                                                                                                                <button
+                                                                                                                    class="btn btn-primary modal__button--update"
+                                                                                                                    type="submit"
+                                                                                                                    data-id="{{ $comment->id }}"
+                                                                                                                    id="comment__button--update">Cập
+                                                                                                                    nhập</button>
+                                                                                                            </form>
+                                                                                                        </div>
 
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
                                                                                         </div>
                                                                                     @endif
                                                                                 </div>
                                                                                 <p id="comment--info{{ $comment->id }}">
                                                                                     {{ $comment->comment }}</p>
+                                                                                <div
+                                                                                    class="reply-comment d-flex flex-row hidden">
+                                                                                    <div class="comet-avatar">
+                                                                                        <img src="{{ asset('/storage/avatar/' . $user->avatars->avatar_name) }}"
+                                                                                            alt="">
+                                                                                    </div>
+                                                                                    <div class="post-comt-box comt-reply">
+                                                                                        <form
+                                                                                            action="{{ route('user.reply.create', ['id' => $comment->id]) }}"
+                                                                                            method="POST">
+                                                                                            @csrf
+                                                                                            <textarea placeholder="Viết phản hồi" name="reply" id="reply__comment{{ $comment->id }}"></textarea>
+                                                                                            <div class="add-smiles">
+                                                                                                <span
+                                                                                                    class="em em-expressionless"
+                                                                                                    title="add icon"></span>
+                                                                                            </div>
+                                                                                            <div class="smiles-bunch">
+                                                                                                <i class="em em---1"></i>
+                                                                                                <i
+                                                                                                    class="em em-smiley"></i>
+                                                                                                <i
+                                                                                                    class="em em-anguished"></i>
+                                                                                                <i
+                                                                                                    class="em em-laughing"></i>
+                                                                                                <i class="em em-angry"></i>
+                                                                                                <i
+                                                                                                    class="em em-astonished"></i>
+                                                                                                <i class="em em-blush"></i>
+                                                                                                <i
+                                                                                                    class="em em-disappointed"></i>
+                                                                                                <i
+                                                                                                    class="em em-worried"></i>
+                                                                                                <i
+                                                                                                    class="em em-kissing_heart"></i>
+                                                                                                <i class="em em-rage"></i>
+                                                                                                <i
+                                                                                                    class="em em-stuck_out_tongue"></i>
+                                                                                            </div>
+                                                                                            <button class="reply-button"
+                                                                                                type="submit"
+                                                                                                id="comment__reply--button"
+                                                                                                data-id="{{ $comment->id }}"></button>
+                                                                                        </form>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
 
-                                                                            </div>
-                                                                            <div
-                                                                                class="reply-comment d-flex flex-row hidden">
-                                                                                <div class="comet-avatar">
-                                                                                    <img src="{{ asset('/storage/avatar/' . $user->avatars->avatar_name) }}"
-                                                                                        alt="">
-                                                                                </div>
-                                                                                <div class="post-comt-box comt-reply">
-                                                                                    <form
-                                                                                        action="{{ route('user.reply.create', ['id' => $comment->id]) }}"
-                                                                                        method="POST">
-                                                                                        @csrf
-                                                                                        <textarea placeholder="Viết phản hồi" name="reply" id=""></textarea>
-                                                                                        <div class="add-smiles">
-                                                                                            <span
-                                                                                                class="em em-expressionless"
-                                                                                                title="add icon"></span>
-                                                                                        </div>
-                                                                                        <div class="smiles-bunch">
-                                                                                            <i class="em em---1"></i>
-                                                                                            <i class="em em-smiley"></i>
-                                                                                            <i class="em em-anguished"></i>
-                                                                                            <i class="em em-laughing"></i>
-                                                                                            <i class="em em-angry"></i>
-                                                                                            <i
-                                                                                                class="em em-astonished"></i>
-                                                                                            <i class="em em-blush"></i>
-                                                                                            <i
-                                                                                                class="em em-disappointed"></i>
-                                                                                            <i class="em em-worried"></i>
-                                                                                            <i
-                                                                                                class="em em-kissing_heart"></i>
-                                                                                            <i class="em em-rage"></i>
-                                                                                            <i
-                                                                                                class="em em-stuck_out_tongue"></i>
-                                                                                        </div>
-                                                                                        <button type="submit"
-                                                                                            id=""
-                                                                                            data-id=""></button>
-                                                                                    </form>
-                                                                                </div>
-                                                                            </div>
-                                                                            <ul>
-                                                                                @foreach ($comment->replies as $reply)
-                                                                                    <li>
+                                                                            <ul class="reply_comment{{ $comment->id }}">
+                                                                                @foreach ($comment->replies->sortByDesc('created_at') as $reply)
+                                                                                    <li
+                                                                                        class="reply_id{{ $reply->id }}">
                                                                                         <div class="comet-avatar">
                                                                                             <img src="{{ asset('/storage/avatar/' . $reply->user->avatars->avatar_name) }}"
                                                                                                 alt="avatar">
@@ -441,10 +460,7 @@
                                                                                                         title="">{{ $reply->user->name }}</a>
                                                                                                 </h5>
                                                                                                 <span>{{ $reply->created_at->diffForHumans() }}</span>
-                                                                                                <a class="we-reply"
-                                                                                                    href="#"
-                                                                                                    title="Reply"><i
-                                                                                                        class="fa fa-reply"></i></a>
+
                                                                                                 @if ($reply->comment->user_id == Auth::user()->id || $reply->post->user_id == Auth::user()->id)
                                                                                                     <div
                                                                                                         class="dropdown drop-reply">
@@ -473,7 +489,7 @@
                                                                                                                 @csrf
                                                                                                                 @method('DELETE')
                                                                                                                 <button
-                                                                                                                    class="dropdown-item"
+                                                                                                                    class="dropdown-item reply__button--delete"
                                                                                                                     id="reply__button--delete"
                                                                                                                     type="submit"
                                                                                                                     data-id="{{ $reply->id }}">Xóa
@@ -528,7 +544,8 @@
                                                                             <i class="em em-rage"></i>
                                                                             <i class="em em-stuck_out_tongue"></i>
                                                                         </div>
-                                                                        <button type="submit" id="post__comment--button"
+                                                                        <button class="comment-button" type="submit"
+                                                                            id="post__comment--button"
                                                                             data-id="{{ $post->id }}"></button>
                                                                     </form>
                                                                 </div>

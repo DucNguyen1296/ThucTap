@@ -90,8 +90,10 @@
                             <li>
                                 <a class="active" href="{{ asset('/user/' . $user->id) }}" title=""
                                     data-ripple="">Bài viết</a>
-                                <a class="" href="timeline-photos.html" title="" data-ripple="">Ảnh</a>
-                                <a class="" href="timeline-videos.html" title="" data-ripple="">Videos</a>
+                                <a class="" href="{{ route('user.friend.photo', ['id' => $user->id]) }}"
+                                    title="" data-ripple="">Ảnh</a>
+                                <a class="" href="{{ route('user.friend.video', ['id' => $user->id]) }}"
+                                    title="" data-ripple="">Videos</a>
                                 <a class="" href="{{ route('user.friend.show', ['id' => $user->id]) }}"
                                     title="" data-ripple="">Bạn bè</a>
                                 <a class="" href="timeline-groups.html" title="" data-ripple="">Nhóm</a>

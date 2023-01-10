@@ -20,9 +20,9 @@
                 <p>Name</p>
                 <input type="text" name="name" placeholder="Enter Name" />
                 <p>Email</p>
-                <input type="text" name="email" placeholder="Enter Email" />
+                <input type="text" name="reg_email" placeholder="Enter Email" />
                 <p>Password</p>
-                <input type="password" name="password" placeholder="Enter your password" />
+                <input type="password" name="reg_password" placeholder="Enter your password" />
                 <p>Retype Password</p>
                 <input type="password" name="retypepassword" placeholder="Retype your password" />
                 <p>Date of Birth</p>

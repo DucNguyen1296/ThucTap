@@ -48,18 +48,16 @@ class ReplyController extends Controller
         $post = Post::where('id', $comment->post_id)->first();
         // dd($comment->post_id);
         $reply = $request->input('reply');
-        Reply::create([
+
+        $rep = Reply::create([
             'user_id' => $user->id,
             'post_id' => $post->id,
             'comment_id' => $comment->id,
             'reply' => $reply,
             'created_at' => Carbon::now('Asia/Ho_Chi_Minh')
         ]);
-        return redirect()->back();
-        // } else {
-        //     Session::flash('comment_session', 'Xin vui lòng đăng nhập trước khi bình luận');
-        //     return redirect()->back();
-        // }
+        return response()->json($rep);
+        
     }
 
     /**
@@ -105,7 +103,7 @@ class ReplyController extends Controller
     public function destroy($id)
     {
         //
-        Reply::where('id', $id)->firstOrFail()->delete();
-        return response()->json([]);
+        Reply::where('id', $id)->delete();
+        return response('ok');
     }
 }

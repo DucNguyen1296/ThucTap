@@ -37,7 +37,7 @@
                 </li>
                 <li>
                     <i class="ti-mouse-alt"></i>
-                    <a href="inbox.html" title="">Inbox</a>
+                    <a href="{{ url('/chat/' . Auth::user()->id) }}" title="">Inbox</a>
                 </li>
                 <li>
                     <i class="ti-files"></i>
@@ -49,11 +49,11 @@
                 </li>
                 <li>
                     <i class="ti-image"></i>
-                    <a href="timeline-photos.html" title="">Ảnh</a>
+                    <a href="{{ route('user.friend.photo', ['id' => $user->id]) }}" title="">Ảnh</a>
                 </li>
                 <li>
                     <i class="ti-video-camera"></i>
-                    <a href="timeline-videos.html" title="">Videos</a>
+                    <a href="{{ route('user.friend.video', ['id' => $user->id]) }}" title="">Videos</a>
                 </li>
                 <li>
                     <i class="ti-comments-smiley"></i>

@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Mail;
 */
 
 Route::get('/', function () {
-    return view('login');
+    return view('trangchu.login');
 });
 
 // if (1) {
@@ -61,11 +61,11 @@ Route::get('/', function () {
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/', function () {
-        return view('login');
+        return view('trangchu.login');
     });
 
     Route::get('/login', function () {
-        return view('login');
+        return view('trangchu.login');
     })->name('login');
 
 
@@ -74,13 +74,14 @@ Route::middleware(['guest'])->group(function () {
         return view('register');
     })->name('register');
 
-    // Route register
-    Route::post('/register', [RegisterController::class, 'register']);
+
 
     // Route Access Login
     Route::post('/', [LoginController::class, 'login'])->name('user.login');
 });
 
+// Route register
+Route::post('/register', [RegisterController::class, 'register']);
 ////////////////// ADMIN ROUTE ////////////////////
 /////////// POST ROUTE ////////////////
 
@@ -153,6 +154,18 @@ Route::middleware(['UserStatusMiddleWare'])->group(function () {
 
     Route::post('/click', [MainController::class, 'click']);
     Route::post('/scroll', [MainController::class, 'scroll']);
+
+    // Chat
+    Route::post('/send-messenger/{id}', [MessengerController::class, 'store']);
+
+    /////// Friend
+    Route::post('/add_friend/{id}', [FriendController::class, 'store'])->name('user.friend.store');
+    Route::delete('/delete_friend/{id}', [FriendController::class, 'destroy'])->name('user.friend.delete');
+
+    // Friend request
+    Route::post('/accept/{id?}', [FriendController::class, 'accept'])->name('user.friend.accept');
+    Route::delete('/decline/{id?}', [FriendController::class, 'decline'])->name('user.friend.decline');
+    Route::delete('/cancel/{id?}', [FriendController::class, 'cancel'])->name('user.friend.cancel');
 });
 
 ///////// ////////USER ROUTE /////////////////////
@@ -179,6 +192,18 @@ Route::middleware(['MyMiddleWare'])->group(function () {
 
     //Friend
     Route::get('/show_friend/{id?}', [FriendController::class, 'show'])->name('user.friend.show');
+
+    // Chat
+    Route::get('/chat/{id?}', [MessengerController::class, 'index']);
+
+    /// Search
+    Route::get('/search', [FriendController::class, 'search'])->name('user.friend.search');
+
+    /// Photo
+    Route::get('/photo/{id}', [FriendController::class, 'photo'])->name('user.friend.photo');
+
+    // Videos
+    Route::get('/video/{id}', [FriendController::class, 'video'])->name('user.friend.video');
 });
 
 
@@ -192,28 +217,10 @@ Route::get('/main_post/{id}', [MainController::class, 'main_post_detail'])->name
 // Route::get('/user/{id}', [MainController::class, 'main_user_detail'])->name('user.profile.detail');
 
 
-/////// Friend
-Route::post('/add_friend/{id}', [FriendController::class, 'store'])->name('user.friend.store');
-Route::delete('/delete_friend/{id}', [FriendController::class, 'destroy'])->name('user.friend.delete');
-
-
-// Friend request
-Route::post('/accept/{id?}', [FriendController::class, 'accept'])->name('user.friend.accept');
-Route::delete('/decline/{id?}', [FriendController::class, 'decline'])->name('user.friend.decline');
-Route::delete('/cancel/{id?}', [FriendController::class, 'cancel'])->name('user.friend.cancel');
-
-//// Timeline
-Route::get('/timeline/{id?}', [FriendController::class, 'index'])->name('user.friend.timeline');
-
 /// NewsFeed
 // Route::get('/newsfeed/{id?}', [FriendController::class, 'newsfeed'])->name('user.newsfeed');
 
-// Chat
-Route::get('/chat/{id?}', [MessengerController::class, 'index']);
-Route::post('/send-messenger/{id}', [MessengerController::class, 'store']);
 
-/// Search
-Route::get('/search', [FriendController::class, 'search'])->name('user.friend.search');
 
 /////// Mail
 

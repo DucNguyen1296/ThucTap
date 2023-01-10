@@ -24,16 +24,27 @@ class FriendController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index()
     {
         //
-        $user1 = Auth::user();
-        $user2 = User::where('id', $id)->first();
-        $friend = Friend::where('user_id', '=', $user1->id)->where('friend_id', '=', $user2->id)->first();
-        // dd($friend);
-        $users = User::all();
+    }
 
-        return view('main.timeline', ['user1' => $user1, 'user2' => $user2, 'friend' => $friend, 'users' => $users]);
+    public function photo($id)
+    {
+        //
+        $user = User::find($id);
+        $userData = User::whereRelation('friendsTo', 'friend_id', Auth::user()->id)->where('status', 1)->get();
+        $message = $user->friendsMessenger;
+        return view('trangchu.pages.photo')->with(compact('user', 'userData', 'message'));
+    }
+
+    public function video($id)
+    {
+        //
+        $user = User::find($id);
+        $userData = User::whereRelation('friendsTo', 'friend_id', Auth::user()->id)->where('status', 1)->get();
+        $message = $user->friendsMessenger;
+        return view('trangchu.pages.video')->with(compact('user', 'userData', 'message'));
     }
 
     /**
@@ -107,7 +118,7 @@ class FriendController extends Controller
         $userData = User::whereRelation('friendsTo', 'friend_id', Auth::user()->id)->where('status', 1)->get();
         // dd($friendsFrom);
         $message = $user->friendsMessenger;
-        // dd($friendsFrom->where('approved', 1)->where('id', '!=', $user->id)[2]->users);
+        // dd($friendsFrom->where('approved', 1)->where('id', '!=', $user->id));
         return view('trangchu.pages.friend', ['user' => $user, 'friend' => $friend, 'friends' => $friends, 'friendsFrom' => $friendsFrom, 'friendsTo' => $friendsTo, 'userData' => $userData, 'message' => $message]);
     }
 

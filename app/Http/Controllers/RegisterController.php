@@ -15,8 +15,8 @@ class RegisterController extends Controller
     //
     public function register(Request $request)
     {
-        $email = $request->input('email');
-        $password = $request->input('password');
+        $email = $request->input('reg_email');
+        $password = $request->input('reg_password');
         $repassword = $request->input('retypepassword');
         $name = $request->input('name');
         $date = $request->input('date');
@@ -24,13 +24,14 @@ class RegisterController extends Controller
         $title = $request->input('title');
         $term = $request->input('term');
 
-        $validate = $request->validate([
-            'email' => 'required|unique:users,email|email:filter',
-            'password' => 'required||min:3',
-            'name' => 'required|unique:users,name',
-            'term' => 'required'
-        ]);
+        // $validate = $request->validate([
+        //     'email' => 'required|unique:users,email|email:filter',
+        //     'password' => 'required||min:3',
+        //     'name' => 'required|unique:users,name',
+        //     'term' => 'required'
+        // ]);
 
+        // dd($request->all());
         //// CREATE A MILLION users
         // set_time_limit(2000000000000000);
         // for ($i = 100; $i < 1000000; $i++) {
@@ -79,8 +80,9 @@ class RegisterController extends Controller
             return redirect(route('login'));
         } else {
             // session()->flash('notmatch', 'Mật khẩu không khớp, xin nhập lại');
+            dd('aaa');
             Session::flash('notmatch', 'Mật khẩu không khớp, xin nhập lại');
-            return redirect()->route('register');
+            return redirect()->route('login');
         }
     }
 }
